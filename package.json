@@ -1,35 +1,42 @@
 {
-  "name": "sl-vue-tree-next",
-  "version": "0.0.1",
-  "description": "draggable tree vue component",
-  "browserslist": "> 0.25%, not dead",
-  "main": "dist/sl-vue-tree-next.js",
-  "types": "dist/sl-vue-tree-next.d.ts",
-  "scripts": {
-    "clear": "rimraf dist",
-    "dev": "vite",
-    "build": "vite build",
-    "serve": "vite preview",
-    "lint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src",
-    "format": "prettier .  --write"
-  },
-  "keywords": [
-    "vue",
-    "tree",
-    "draggable",
-    "sortable"
-  ],
-  "author": "Holiber",
-  "license": "MIT",
-  "devDependencies": {
-    "@vitejs/plugin-vue": "^5.0.3",
-    "eslint": "^8.56.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-vue": "^9.21.1",
-    "prettier": "3.2.4",
-    "rimraf": "^2.6.2",
-    "typescript": "^5.3.3",
-    "vite": "^5.0.12",
-    "vue": "^3.4.15"
-  }
+    "name": "sl-vue-tree-next",
+    "version": "0.0.1",
+    "description": "draggable tree vue component",
+    "browserslist": "> 0.25%, not dead",
+    "main": "dist/assets/index.js",
+    "types": "dist/assets/index.d.ts",
+    "exports": {
+        ".": {
+            "import": "./dist/assets/index.js",
+            "require": "./dist/assets/index.js"
+        }
+    },
+    "scripts": {
+        "clear": "rimraf dist",
+        "dev": "vite",
+        "build": "vite build",
+        "serve": "vite preview",
+        "lint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src",
+        "format": "prettier .  --write"
+    },
+    "keywords": [
+        "vue",
+        "vue3",
+        "tree",
+        "draggable",
+        "sortable"
+    ],
+    "author": "Holiber",
+    "license": "MIT",
+    "devDependencies": {
+        "@vitejs/plugin-vue": "^5.0.3",
+        "eslint": "^8.56.0",
+        "eslint-config-prettier": "^9.1.0",
+        "eslint-plugin-vue": "^9.21.1",
+        "prettier": "3.2.4",
+        "rimraf": "^2.6.2",
+        "typescript": "^5.3.3",
+        "vite": "^5.0.12",
+        "vue": "^3.4.15"
+    }
 }
