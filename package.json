@@ -1,18 +1,20 @@
 {
     "name": "sl-vue-tree-next",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "draggable tree vue component",
     "browserslist": "> 0.25%, not dead",
-    "main": "dist/assets/index.js",
-    "types": "dist/assets/index.d.ts",
+    "type": "module",
+    "files": [
+        "dist"
+    ],
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
     "exports": {
         ".": {
-            "import": "./dist/assets/index.js",
-            "require": "./dist/assets/index.js"
+            "import": "./dist/index.js"
         }
     },
     "scripts": {
-        "clear": "rimraf dist",
         "dev": "vite",
         "build": "vite build",
         "serve": "vite preview",
@@ -28,6 +30,9 @@
     ],
     "author": "Holiber",
     "license": "MIT",
+    "dependencies": {
+        "vue": "^3.4.15"
+    },
     "devDependencies": {
         "@vitejs/plugin-vue": "^5.0.3",
         "eslint": "^8.56.0",
@@ -36,7 +41,6 @@
         "prettier": "3.2.4",
         "rimraf": "^2.6.2",
         "typescript": "^5.3.3",
-        "vite": "^5.0.12",
-        "vue": "^3.4.15"
+        "vite": "^5.0.12"
     }
 }

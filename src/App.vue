@@ -23,7 +23,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { SlVueTreeNext } from '@/components/SlVueTreeNext'
+import { SlVueTreeNext } from './components/SlVueTreeNext'
 import SlVueTreeOld from './sl-vue-tree.vue'
 
 const nodes = [
