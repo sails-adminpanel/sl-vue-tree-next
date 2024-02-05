@@ -1,9 +1,10 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
+import dts from "vite-plugin-dts";
 import path from "path";
 
 export default defineConfig({
-    plugins: [vue()],
+    plugins: [vue(), dts()],
     resolve: {
         alias: {
             '@': path.resolve(__dirname, './src'),
@@ -17,10 +18,11 @@ export default defineConfig({
         },
         outDir: 'dist',
         rollupOptions: {
+            external: ['vue'],
             output: {
-                entryFileNames: '[name].js',
-                chunkFileNames: '[name].js',
-                assetFileNames: '[name].[ext]',
+                globals: {
+                    vue: 'Vue',
+                },
             },
         },
         commonjsOptions: { include: []}

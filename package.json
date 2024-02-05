@@ -4,14 +4,21 @@
     "description": "draggable tree vue component",
     "browserslist": "> 0.25%, not dead",
     "type": "module",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/kcsujeet/sl-vue-tree-next"
+    },
     "files": [
-        "dist"
+        "dist",
+        "src/components"
     ],
-    "main": "dist/index.js",
+    "main": "dist/sl-vue-tree-next.umd.cjs",
+    "module": "dist/sl-vue-tree-next.js",
     "types": "dist/index.d.ts",
     "exports": {
         ".": {
-            "import": "./dist/index.js"
+            "import": "./dist/sl-vue-tree-next.js",
+            "require": "./dist/sl-vue-tree-next.umd.cjs"
         }
     },
     "scripts": {
@@ -30,6 +37,9 @@
     ],
     "author": "Holiber",
     "license": "MIT",
+    "peerDependencies": {
+        "vue": "^3.0.0"
+    },
     "dependencies": {
         "vue": "^3.4.15"
     },
@@ -41,6 +51,7 @@
         "prettier": "3.2.4",
         "rimraf": "^2.6.2",
         "typescript": "^5.3.3",
-        "vite": "^5.0.12"
+        "vite": "^5.0.12",
+        "vite-plugin-dts": "^3.7.2"
     }
 }

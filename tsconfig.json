@@ -1,26 +1,16 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "target": "es6",
-    "lib": [
-      "dom",
-      "es7",
-      "es2022"
-    ],
-    "module": "es2015",
-    "moduleResolution": "node",
-    "isolatedModules": false,
-    "experimentalDecorators": true,
-    "noImplicitAny": false,
-    "noImplicitThis": true,
-    "removeComments": true,
-    "allowSyntheticDefaultImports": true,
-    "outDir": "dist",
-    "sourceMap": true,
-    "allowJs": false,
-    "strictNullChecks": false,
-    "emitDecoratorMetadata": true,
-    "declaration": true,
+    "target": "ESNext",
+    "module": "ESNext",
+    "lib": ["ESNext", "DOM"],
+    "useDefineForClassFields": true,
+    "moduleResolution": "Node",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "noEmit": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
