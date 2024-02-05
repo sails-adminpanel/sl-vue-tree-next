@@ -126,6 +126,7 @@ export default {
   methods: {
 
     setCursorPosition(pos) {
+      console.log(pos, 'old vue tree');
       if (this.isRoot) {
         this.rootCursorPosition = pos;
         return;

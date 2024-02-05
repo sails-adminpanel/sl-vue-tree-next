@@ -1,11 +1,11 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6",
     "lib": [
       "dom",
       "es7",
-      "es2017"
+      "es2022"
     ],
     "module": "es2015",
     "moduleResolution": "node",
@@ -14,21 +14,20 @@
     "noImplicitAny": false,
     "noImplicitThis": true,
     "removeComments": true,
-    "suppressImplicitAnyIndexErrors": true,
     "allowSyntheticDefaultImports": true,
-
     "outDir": "./",
     "sourceMap": true,
     "allowJs": false,
     "strictNullChecks": false,
     "emitDecoratorMetadata": true,
-    "baseUrl": "./src",
-    "declaration": true
+    "declaration": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
   "exclude": [
     "node_modules"
   ],
-  "include": [
-    "./src/**/*.ts"
-  ]
+  "include": [ "src/**/*.ts", "src/**/*.vue", "src/**/*.d.ts"]
 }
