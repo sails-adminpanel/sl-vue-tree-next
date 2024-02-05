@@ -10,21 +10,11 @@
     >
     </sl-vue-tree-next>
 
-    <h2 style="margin: 2rem 0">Vu2 2 Tree</h2>
-    <sl-vue-tree-old
-        :value="nodes"
-        ref="slVueTreeOld"
-        :allow-multiselect="true"
-        @select="nodeSelected"
-        @drop="nodeDropped"
-        @toggle="nodeToggled"
-    />
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import { SlVueTreeNext } from './components/SlVueTreeNext'
-import SlVueTreeOld from './sl-vue-tree.vue'
 
 const nodes = [
     { title: 'Item1', isLeaf: true },

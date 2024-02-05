@@ -1,1 +1,3 @@
-export * from './components/SlVueTreeNext'
+import { SlVueTreeNext } from '@/components/SlVueTreeNext'
+
+export { SlVueTreeNext }
