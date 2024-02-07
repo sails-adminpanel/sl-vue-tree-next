@@ -58,6 +58,6 @@ export interface Context {
     updateNode: (val: { path: number[], patch: Partial<TreeNode>}) => void
     getSelected: () => TreeNode[]
     insert: (node: TreeNode, data: NodeModel, placement: 'before' | 'inside' | 'after') => void
-    remove: (node: TreeNode) => void
+    remove: (paths?: number[][]) => void
     rootCursorPosition: Ref<CursorPosition>
 }
