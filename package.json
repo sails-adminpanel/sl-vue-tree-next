@@ -19,6 +19,14 @@
         ".": {
             "import": "./dist/sl-vue-tree-next.js",
             "require": "./dist/sl-vue-tree-next.umd.cjs"
+        },
+        "./sl-vue-tree-next-minimal.css": {
+            "import": "./dist/sl-vue-tree-next-minimal.css",
+            "require": "./dist/sl-vue-tree-next-minimal.css"
+        },
+        "./sl-vue-tree-next-dark.css": {
+            "import": "./dist/sl-vue-tree-next-dark.css",
+            "require": "./dist/sl-vue-tree-next-dark.css"
         }
     },
     "scripts": {
