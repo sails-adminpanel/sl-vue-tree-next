@@ -1,17 +1,17 @@
 import { ComputedRef, Ref } from "vue"
 
-export interface NodeModel {
+export interface NodeModel<T> {
     title: string
     isLeaf?: boolean
-    children?: NodeModel[]
+    children?: NodeModel<T>[]
     isExpanded?: boolean
     isSelected?: boolean
     isDraggable?: boolean
     isSelectable?: boolean
-    data?: any
+    data?: T
 }
 
-export interface TreeNode extends NodeModel {
+export interface TreeNode<T> extends NodeModel<T> {
     isVisible?: boolean
     isFirstChild: boolean
     isLastChild: boolean
@@ -19,53 +19,53 @@ export interface TreeNode extends NodeModel {
     level: number
     path: number[]
     pathStr: string
-    children: TreeNode[]
+    children: TreeNode<T>[]
 }
 
-export interface CursorPosition {
-    node: TreeNode
+export interface CursorPosition<T> {
+    node: TreeNode<T>
     placement: 'before' | 'inside' | 'after'
 }
 
-export interface VueData {
-    rootCursorPosition: CursorPosition
-    rootDraggingNode: TreeNode
+export interface VueData<T> {
+    rootCursorPosition: CursorPosition<T>
+    rootDraggingNode: TreeNode<T>
 }
 
-export interface SlVueTreeProps {
-    modelValue?: NodeModel[]
+export interface SlVueTreeProps<T> {
+    modelValue?: NodeModel<T>[]
     edgeSize?: number
     allowMultiselect?: boolean
     showBranches?: boolean
     level?: number
     parentInd?: number
-    parentContext?: Context
+    parentContext?: Context<T>
     rootContext?: any
     allowToggleBranch?: boolean
 }
 
-export interface Context {
-    getRoot: () => TreeNode
-    setCursorPosition: (cursorPosition: CursorPosition) => void
-    currentNodes: ComputedRef<TreeNode[]>
-    cursorPosition: ComputedRef<CursorPosition>
+export interface Context<T> {
+    getRoot: () => TreeNode<T>
+    setCursorPosition: (cursorPosition: CursorPosition<T>) => void
+    currentNodes: ComputedRef<TreeNode<T>[]>
+    cursorPosition: ComputedRef<CursorPosition<T>>
     emit: (event: string, ...args: any[]) => void
     ref: any
-    onNodeMousedownHandler: (event: MouseEvent, node: TreeNode) => void
-    onNodeMouseupHandler: (event: MouseEvent, node: TreeNode) => void
+    onNodeMousedownHandler: (event: MouseEvent, node: TreeNode<T>) => void
+    onNodeMouseupHandler: (event: MouseEvent, node: TreeNode<T>) => void
     onMousemoveHandler: (event: MouseEvent) => void
-    getCursorPositionFromCoords: (x: number, y: number) => CursorPosition
-    updateNode: (val: { path: number[], patch: Partial<TreeNode>}) => void
-    getNode: (path: number[]) => TreeNode
-    traverse: (callback: (node: TreeNode) => void) => void
-    select: (path:number[], addToSelection?: boolean) => void
+    getCursorPositionFromCoords: (x: number, y: number) => CursorPosition<T>
+    updateNode: (val: { path: number[]; patch: Partial<TreeNode<T>> }) => void
+    getNode: (path: number[]) => TreeNode<T>
+    traverse: (callback: (node: TreeNode<T>) => void) => void
+    select: (path: number[], addToSelection?: boolean) => void
     getNodeEl: (path: number[]) => HTMLElement
-    getFirstNode: () => TreeNode
-    getLastNode: () => TreeNode
-    getNextNode: (path: number[], filter?: ( node: TreeNode) => boolean) => TreeNode
-    getPrevNode: (path: number[], filter?: (node: TreeNode) => boolean) => TreeNode
-    getSelected: () => TreeNode[]
-    insert: (node: TreeNode, data: NodeModel, placement: 'before' | 'inside' | 'after') => void
+    getFirstNode: () => TreeNode<T>
+    getLastNode: () => TreeNode<T>
+    getNextNode: (path: number[], filter?: (node: TreeNode<T>) => boolean) => TreeNode<T>
+    getPrevNode: (path: number[], filter?: (node: TreeNode<T>) => boolean) => TreeNode<T>
+    getSelected: () => TreeNode<T>[]
+    insert: (node: TreeNode<T>, data: NodeModel<T>, placement: 'before' | 'inside' | 'after') => void
     remove: (paths?: number[][]) => void
-    rootCursorPosition: Ref<CursorPosition>
+    rootCursorPosition: Ref<CursorPosition<T>>
 }

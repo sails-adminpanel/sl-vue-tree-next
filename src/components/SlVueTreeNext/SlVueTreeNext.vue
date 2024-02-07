@@ -154,12 +154,12 @@
     </div>
 </template>
 
-<script setup lang="ts">
-import { ref, defineEmits, onMounted, onBeforeUnmount, watchEffect, computed, defineExpose } from 'vue'
+<script setup lang="ts" generic="T">
+import { ref, defineEmits, onMounted, onBeforeUnmount, watchEffect, computed, defineExpose, Ref } from 'vue'
 import type { NodeModel, TreeNode, SlVueTreeProps, CursorPosition, Context } from './types'
 
 // props
-const props = withDefaults(defineProps<SlVueTreeProps>(), {
+const props = withDefaults(defineProps<SlVueTreeProps<T>>(), {
     modelValue: () => [],
     edgeSize: 3,
     showBranches: false,
@@ -192,15 +192,15 @@ const dragInfoRef = ref<HTMLDivElement>()
 const rootRef = ref<HTMLDivElement>()
 
 // data
-const rootCursorPosition = ref<CursorPosition>(null)
+const rootCursorPosition = ref<CursorPosition<T>>(null) as Ref<CursorPosition<T> | null>
 const scrollIntervalId = ref(0)
 const scrollSpeed = ref(0)
-const lastSelectedNode = ref<TreeNode | null>(null)
+const lastSelectedNode = ref<TreeNode<T> | null>(null) as Ref<TreeNode<T> | null>
 const mouseIsDown = ref(false)
 const isDragging = ref(false)
 const lastMousePos = ref({ x: 0, y: 0 })
 const preventDrag = ref(false)
-const currentValue = ref<NodeModel[]>([])
+const currentValue = ref<NodeModel<T>[]>([]) as Ref<NodeModel<T>[]>
 
 // computed
 const isRoot = computed(() => !props.level)
@@ -216,16 +216,16 @@ const gaps = computed(() => {
     return temp
 })
 
-const cursorPosition = computed<CursorPosition>(() => {
+const cursorPosition = computed<CursorPosition<T>>(() => {
     const currentPos = isRoot.value ? rootCursorPosition.value : getParent()?.cursorPosition.value
-    return currentPos
+    return currentPos as CursorPosition<T>
 })
 
 const depth = computed(() => {
     return gaps.value.length
 })
 
-const currentNodes = computed<TreeNode[]>(() => {
+const currentNodes = computed<TreeNode<T>[]>(() => {
     if (isRoot.value) {
         const nodeModels = copy(currentValue.value)
         const n = getNodes(nodeModels)
@@ -281,10 +281,10 @@ const getNodes = (nodeModels, parentPath = [], visible = true) => {
 
 const getNode = (
     path,
-    nodeModel: NodeModel | null = null,
-    siblings: NodeModel[] | null = null,
+    nodeModel: NodeModel<T> | null = null,
+    siblings: NodeModel<T>[] | null = null,
     visible = false,
-): TreeNode | null => {
+): TreeNode<T> | null => {
     const ind = path.slice(-1)[0]
 
     // calculate nodeModel, siblings, visible fields if it is not passed as arguments
@@ -301,19 +301,19 @@ const getNode = (
     const isDraggable = nodeModel.isDraggable == void 0 ? true : !!nodeModel.isDraggable
     const isSelectable = nodeModel.isSelectable == void 0 ? true : !!nodeModel.isSelectable
 
-    const node = {
-        // define the all ISlTreeNodeModel props
+    const node: TreeNode<T> = {
+        // define the all TreeNodeModel props
         title: nodeModel.title,
         isLeaf: !!nodeModel.isLeaf,
         children: nodeModel.children ? getNodes(nodeModel.children, path, isExpanded) : [],
         isSelected: !!nodeModel.isSelected,
         isExpanded,
-        visible,
+        isVisible: visible,
         isDraggable,
         isSelectable,
-        data: nodeModel.data !== void 0 ? nodeModel.data : {},
+        data: nodeModel.data !== void 0 ? nodeModel.data : ({} as T),
 
-        // define the all ISlTreeNode computed props
+        // define the all TreeNode computed props
         path: path,
         pathStr: JSON.stringify(path),
         level: path.length,
@@ -327,7 +327,7 @@ const getNode = (
 
 const isVisible = (path) => {
     if (path.length < 2) return true
-    let nodeModels = currentValue.value as NodeModel[]
+    let nodeModels = currentValue.value as NodeModel<T>[]
 
     for (let i = 0; i < path.length - 1; i++) {
         let ind = path[i]
@@ -401,7 +401,7 @@ const select = (path, addToSelection = false, event: MouseEvent | null = null) =
     if (!selectedNode) return null
     const newNodes = copy(currentValue.value)
     const shiftSelectionMode = props.allowMultiselect && event && event.shiftKey && lastSelectedNode.value
-    const selectedNodes: NodeModel[] = []
+    const selectedNodes: NodeModel<T>[] = []
     let shiftSelectionStarted = false
 
     traverse((node, nodeModel) => {
@@ -565,7 +565,7 @@ const getFirstNode = () => {
     return getNode([0])
 }
 
-const getNextNode = (path: number[], filter?: (node: TreeNode) => boolean): TreeNode => {
+const getNextNode = (path: number[], filter?: (node: TreeNode<T>) => boolean): TreeNode<T> => {
     let resultNode = null
 
     traverse((node) => {
@@ -580,8 +580,8 @@ const getNextNode = (path: number[], filter?: (node: TreeNode) => boolean): Tree
     return resultNode
 }
 
-const getPrevNode = (path: number[], filter?: (node: TreeNode) => boolean) => {
-    let prevNodes: TreeNode[] = []
+const getPrevNode = (path: number[], filter?: (node: TreeNode<T>) => boolean) => {
+    let prevNodes: TreeNode<T>[] = []
 
     traverse((node) => {
         if (comparePaths(node.path, path) >= 0) {
@@ -658,7 +658,7 @@ const onDocumentMouseupHandler = (event) => {
     if (isDragging.value) onNodeMouseupHandler(event)
 }
 
-const onNodeMouseupHandler = (event: MouseEvent, targetNode: TreeNode | null = null) => {
+const onNodeMouseupHandler = (event: MouseEvent, targetNode: TreeNode<T> | null = null) => {
     // handle only left mouse button
     if (event.button !== 0) return
 
@@ -696,7 +696,7 @@ const onNodeMouseupHandler = (event: MouseEvent, targetNode: TreeNode | null = n
     }
 
     const newNodes = copy(currentValue.value)
-    const nodeModelsSubjectToInsert: TreeNode[] = []
+    const nodeModelsSubjectToInsert: TreeNode<T>[] = []
 
     // find dragging model to delete
     for (let draggingNode of draggingNodes) {
@@ -714,7 +714,7 @@ const onNodeMouseupHandler = (event: MouseEvent, targetNode: TreeNode | null = n
         return
     }
 
-    const nodeModelsToInsert: TreeNode[] = []
+    const nodeModelsToInsert: TreeNode<T>[] = []
 
     // mark dragging model to delete
     for (let draggingNodeModel of nodeModelsSubjectToInsert) {
@@ -762,7 +762,7 @@ const getRoot = () => {
     return props.rootContext
 }
 
-const getNodeSiblings = (nodes, path): TreeNode[] => {
+const getNodeSiblings = (nodes, path): TreeNode<T>[] => {
     if (path.length === 1) return nodes
     return getNodeSiblings(nodes[path[0]].children, path.slice(1))
 }
@@ -783,7 +783,7 @@ const updateNode = ({ path, patch }) => {
 }
 
 const getSelected = () => {
-    const selectedNodes: TreeNode[] = []
+    const selectedNodes: TreeNode<T>[] = []
     traverse((node) => {
         if (node.isSelected) selectedNodes.push(node)
     })
@@ -791,19 +791,23 @@ const getSelected = () => {
 }
 
 const getDraggable = () => {
-    const selectedNodes: TreeNode[] = []
+    const selectedNodes: TreeNode<T>[] = []
     traverse((node) => {
         if (node.isSelected && node.isDraggable) selectedNodes.push(node)
     })
     return selectedNodes
 }
 
-const traverse = (cb, nodeModels: NodeModel[] | null = null, parentPath: number[] = []): NodeModel[] | boolean => {
-    if (!nodeModels) nodeModels = currentValue.value as NodeModel[]
+const traverse = (
+    cb,
+    nodeModels: NodeModel<T>[] | null = null,
+    parentPath: number[] = [],
+): NodeModel<T>[] | boolean => {
+    if (!nodeModels) nodeModels = currentValue.value as NodeModel<T>[]
 
     let shouldStop = false
 
-    const nodes: NodeModel[] = []
+    const nodes: NodeModel<T>[] = []
 
     for (let nodeInd = 0; nodeInd < nodeModels.length; nodeInd++) {
         const nodeModel = nodeModels[nodeInd]
@@ -888,7 +892,7 @@ const copy = (entity) => {
 }
 
 // context
-const currentContext: Context = {
+const currentContext: Context<T> = {
     getRoot,
     setCursorPosition,
     currentNodes,

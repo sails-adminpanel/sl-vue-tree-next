@@ -9,12 +9,16 @@
         @toggle="nodeToggled"
     >
     </sl-vue-tree-next>
-
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import { SlVueTreeNext } from './components/SlVueTreeNext'
+import type { Context } from './components/SlVueTreeNext';
+
+interface DataType {
+    visible?: boolean
+}
 
 const nodes = [
     { title: 'Item1', isLeaf: true },
@@ -52,7 +56,7 @@ const nodes = [
 // data
 const selectedNodesTitle = ref('')
 const lastEvent = ref('No last event')
-const slVueTree = ref<InstanceType<typeof SlVueTreeNext> | null>(null)
+const slVueTree = ref<Context<DataType> | null>(null)
 
 //methods
 

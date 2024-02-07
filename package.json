@@ -1,6 +1,6 @@
 {
     "name": "sl-vue-tree-next",
-    "version": "0.0.6",
+    "version": "0.0.7",
     "description": "draggable tree vue component",
     "browserslist": "> 0.25%, not dead",
     "type": "module",
@@ -46,7 +46,7 @@
     "author": "Holiber",
     "license": "MIT",
     "peerDependencies": {
-        "vue": "^3.0.0"
+        "vue": "^3.3.4"
     },
     "devDependencies": {
         "@vitejs/plugin-vue": "^5.0.3",

@@ -213,6 +213,12 @@ slVueTree.traverse((node, nodeModel, path) => {
 [see CONTRIBUTING.md](CONTRIBUTING.md)
 
 # Changelog
+v0.0.7
+  - add support for generics
+
+v0.0.6
+  - update readme.md
+
 v0.0.5
   - fix computed warnings in console
   - fixed duplicate nodes bug
