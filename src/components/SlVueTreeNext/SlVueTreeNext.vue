@@ -1,19 +1,19 @@
 <template>
     <div
         ref="rootRef"
-        class="sl-vue-tree"
-        :class="{ 'sl-vue-tree-root': isRoot }"
+        class="sl-vue-tree-next"
+        :class="{ 'sl-vue-tree-next-root': isRoot }"
         @mousemove="onMousemoveHandler"
         @mouseleave="onMouseleaveHandler"
     >
-        <div ref="nodes" class="sl-vue-tree-nodes-list">
+        <div ref="nodes" class="sl-vue-tree-next-nodes-list">
             <div
-                class="sl-vue-tree-node"
+                class="sl-vue-tree-next-node"
                 v-for="(node, nodeInd) in nodes"
-                :class="{ 'sl-vue-tree-selected': node.isSelected }"
+                :class="{ 'sl-vue-tree-next-selected': node.isSelected }"
             >
                 <div
-                    class="sl-vue-tree-cursor sl-vue-tree-cursor_before"
+                    class="sl-vue-tree-next-cursor sl-vue-tree-next-cursor_before"
                     @dragover.prevent
                     :style="{
                         visibility:
@@ -29,7 +29,7 @@
                 </div>
 
                 <div
-                    class="sl-vue-tree-node-item"
+                    class="sl-vue-tree-next-node-item"
                     @mousedown="onNodeMousedownHandler($event, node)"
                     @mouseup="onNodeMouseupHandler($event, node)"
                     @contextmenu="emitNodeContextmenu(node, $event)"
@@ -39,20 +39,19 @@
                     @drop="onExternalDropHandler(node, $event)"
                     :path="node.pathStr"
                     :class="{
-                        'sl-vue-tree-cursor-hover':
-                            cursorPosition && cursorPosition.node.pathStr === node.pathStr,
+                        'sl-vue-tree-next-cursor-hover': cursorPosition && cursorPosition.node.pathStr === node.pathStr,
 
-                        'sl-vue-tree-cursor-inside':
+                        'sl-vue-tree-next-cursor-inside':
                             cursorPosition &&
                             cursorPosition.placement === 'inside' &&
                             cursorPosition.node.pathStr === node.pathStr,
-                        'sl-vue-tree-node-is-leaf': node.isLeaf,
-                        'sl-vue-tree-node-is-folder': !node.isLeaf,
+                        'sl-vue-tree-next-node-is-leaf': node.isLeaf,
+                        'sl-vue-tree-next-node-is-folder': !node.isLeaf,
                     }"
                 >
-                    <div class="sl-vue-tree-gap" v-for="gapInd in gaps"></div>
+                    <div class="sl-vue-tree-next-gap" v-for="gapInd in gaps"></div>
 
-                    <div class="sl-vue-tree-branch" v-if="level && showBranches">
+                    <div class="sl-vue-tree-next-branch" v-if="level && showBranches">
                         <slot name="branch" :node="node">
                             <span v-if="!node.isLastChild">
                                 {{ String.fromCharCode(0x251c) }}{{ String.fromCharCode(0x2500) }}&nbsp;
@@ -63,8 +62,12 @@
                         </slot>
                     </div>
 
-                    <div class="sl-vue-tree-title">
-                        <span class="sl-vue-tree-toggle" v-if="!node.isLeaf" @click="onToggleHandler($event, node)">
+                    <div class="sl-vue-tree-next-title">
+                        <span
+                            class="sl-vue-tree-next-toggle"
+                            v-if="!node.isLeaf"
+                            @click="onToggleHandler($event, node)"
+                        >
                             <slot name="toggle" :node="node">
                                 <span>
                                     {{ !node.isLeaf ? (node.isExpanded ? '-' : '+') : '' }}
@@ -82,7 +85,7 @@
                         </slot>
                     </div>
 
-                    <div class="sl-vue-tree-sidebar">
+                    <div class="sl-vue-tree-next-sidebar">
                         <slot name="sidebar" :node="node"></slot>
                     </div>
                 </div>
@@ -128,7 +131,7 @@
                 </SlVueTreeNext>
 
                 <div
-                    class="sl-vue-tree-cursor sl-vue-tree-cursor_after"
+                    class="sl-vue-tree-next-cursor sl-vue-tree-next-cursor_after"
                     @dragover.prevent
                     :style="{
                         visibility:
@@ -144,7 +147,7 @@
                 </div>
             </div>
 
-            <div v-show="isDragging" v-if="isRoot" ref="dragInfoRef" class="sl-vue-tree-drag-info">
+            <div v-show="isDragging" v-if="isRoot" ref="dragInfoRef" class="sl-vue-tree-next-drag-info">
                 <slot name="draginfo"> Items: {{ selectionSize }} </slot>
             </div>
         </div>
@@ -152,16 +155,8 @@
 </template>
 
 <script setup lang="ts">
-import {
-    ref,
-    defineEmits,
-    onMounted,
-    onBeforeUnmount,
-    watchEffect,
-    computed,
-    defineExpose,
-} from 'vue'
-import type { NodeModel, TreeNode, SlVueTreeProps } from './types'
+import { ref, defineEmits, onMounted, onBeforeUnmount, watchEffect, computed, defineExpose } from 'vue'
+import type { NodeModel, TreeNode, SlVueTreeProps, CursorPosition } from './types'
 
 // props
 const props = withDefaults(defineProps<SlVueTreeProps>(), {
@@ -197,7 +192,7 @@ const dragInfoRef = ref<HTMLDivElement>()
 const rootRef = ref<HTMLDivElement>()
 
 // data
-const rootCursorPosition = ref(null)
+const rootCursorPosition = ref<CursorPosition | null>(null)
 const scrollIntervalId = ref(0)
 const scrollSpeed = ref(0)
 const lastSelectedNode = ref<TreeNode | null>(null)
@@ -205,7 +200,7 @@ const mouseIsDown = ref(false)
 const isDragging = ref(false)
 const lastMousePos = ref({ x: 0, y: 0 })
 const preventDrag = ref(false)
-const currentValue = ref([])
+const currentValue = ref<NodeModel[]>([])
 
 // computed
 const isRoot = computed(() => !props.level)
@@ -214,14 +209,14 @@ const isRoot = computed(() => !props.level)
  * @returns {number[]}
  */
 const gaps = computed(() => {
-    const gaps: number[] = []
+    const temp: number[] = []
     let i = props.level - 1
     if (!props.showBranches) i++
-    while (i-- > 0) gaps.push(i)
-    return gaps
+    while (i-- > 0) temp.push(i)
+    return temp
 })
 
-const cursorPosition = computed(() => {
+const cursorPosition = computed<CursorPosition>(() => {
     const currentPos = isRoot.value ? rootCursorPosition.value : getParent()?.cursorPosition.value
     return currentPos
 })
@@ -857,15 +852,16 @@ const remove = (paths) => {
 }
 
 const insertModels = (cursorPosition, nodeModels, newNodes) => {
-    const destNode = cursorPosition.node
+    const positionClone = copy(cursorPosition)
+    const destNode = positionClone.node
     const destSiblings = getNodeSiblings(newNodes, destNode.path)
     const destNodeModel = destSiblings[destNode.ind]
 
-    if (cursorPosition.placement === 'inside') {
+    if (positionClone.placement === 'inside') {
         destNodeModel.children = destNodeModel.children || []
         destNodeModel.children.unshift(...nodeModels)
     } else {
-        const insertInd = cursorPosition.placement === 'before' ? destNode.ind : destNode.ind + 1
+        const insertInd = positionClone.placement === 'before' ? destNode.ind : destNode.ind + 1
 
         destSiblings.splice(insertInd, 0, ...nodeModels)
     }
@@ -881,7 +877,8 @@ const insert = (cursorPosition, nodeModel) => {
 }
 
 const checkNodeIsParent = (sourceNode, destNode) => {
-    const destPath = destNode.path
+    const destNodeCopy = copy(destNode)
+    const destPath = destNodeCopy.path
     return JSON.stringify(destPath.slice(0, sourceNode.path.length)) == sourceNode.pathStr
 }
 
@@ -905,6 +902,7 @@ const currentContext = {
     getSelected,
     insert,
     remove,
+    rootCursorPosition
 }
 
 // needed for access through refs. https://vuejs.org/guide/typescript/composition-api#typing-component-template-refs

@@ -41,3 +41,4 @@ export interface SlVueTreeProps {
     rootContext?: any
     allowToggleBranch?: boolean
 }
+

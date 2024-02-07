@@ -4,7 +4,7 @@ Customizable draggable tree component for Vue.js
 
 ![preview](preview.png)
 
-[demo](https://holiber.github.io/sl-vue-tree/demo/index)
+[demo](https://holiber.github.io/sl-vue-tree-next/demo/index)
 
 install
 
@@ -18,8 +18,8 @@ install
   <sl-vue-tree-next v-model="nodes"/>
 </div>
 
-<link rel="stylesheet" href="dist/sl-vue-tree-dark.css">
-<script src="dist/sl-vue-tree.js"></script>
+<link rel="stylesheet" href="dist/sl-vue-tree-next-dark.css">
+<script src="dist/sl-vue-tree-next.js"></script>
 
 <script>
 
@@ -123,7 +123,7 @@ interface ICursorPosition<TDataType> {
 | nodeclick       | node: Node, event: MouseEvent                                       | handle `click` event on node                      |
 | nodedblclick    | node: Node, event: MouseEvent                                       | handle `dblclick` event on node                   |
 | nodecontextmenu | node: Node, event: MouseEvent                                       | handle `contextmenu` event on node                |
-| externaldrop    | cursorPosition: ICursorPosition, event: MouseEvent                         | handle `drop` event for external items [demo](https://holiber.github.io/sl-vue-tree/demo/externaldrag)             |
+| externaldrop    | cursorPosition: ICursorPosition, event: MouseEvent                         | handle `drop` event for external items [demo](https://holiber.github.io/sl-vue-tree-next/demo/externaldrag)             |
 
 # Methods
 
@@ -184,8 +184,6 @@ slVueTree.traverse((node, nodeModel, path) => {
 ```
 
 ## Handle keydown and keyup events via `getNextNode` and `getPrevNode` methods
-
-<!-- [demo](https://holiber.github.io/sl-vue-tree/demo/keyboardcontrol) -->
 
 ## Contributing
 [see CONTRIBUTING.md](CONTRIBUTING.md)

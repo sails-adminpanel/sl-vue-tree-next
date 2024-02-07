@@ -85,7 +85,7 @@ const removeNode = () => {
 </script>
 
 <style>
-@import './sl-vue-tree-minimal.css';
+@import '/sl-vue-tree-next-minimal.css';
 .logo {
     height: 6em;
     padding: 1.5em;
