@@ -60,15 +60,17 @@ const nodes = [
         ],
     },
 ]
-<script>
+</script>
 
 <style>
   @import 'sl-vue-tree-next/sl-vue-tree-next-minimal.css';
 </style>
 ````
 You can also use dark version.
-```
+```html
+<style>
   @import 'sl-vue-tree-next/sl-vue-tree-next-dark.css';
+</style>
 ```
 
 The `value` property is an array of `NodeModel` nodes:
