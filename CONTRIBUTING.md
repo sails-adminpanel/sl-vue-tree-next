@@ -1,10 +1,10 @@
 # Contributing
 
-PRs are appreciated. 
+PRs are appreciated.
 
 to start watcher run:
 
-`npm run start`
+`npm run dev`
 
 to build project run:
 

@@ -56,6 +56,14 @@ export interface Context {
     onMousemoveHandler: (event: MouseEvent) => void
     getCursorPositionFromCoords: (x: number, y: number) => CursorPosition
     updateNode: (val: { path: number[], patch: Partial<TreeNode>}) => void
+    getNode: (path: number[]) => TreeNode
+    traverse: (callback: (node: TreeNode) => void) => void
+    select: (path:number[], addToSelection?: boolean) => void
+    getNodeEl: (path: number[]) => HTMLElement
+    getFirstNode: () => TreeNode
+    getLastNode: () => TreeNode
+    getNextNode: (path: number[], filter?: ( node: TreeNode) => boolean) => TreeNode
+    getPrevNode: (path: number[], filter?: (node: TreeNode) => boolean) => TreeNode
     getSelected: () => TreeNode[]
     insert: (node: TreeNode, data: NodeModel, placement: 'before' | 'inside' | 'after') => void
     remove: (paths?: number[][]) => void

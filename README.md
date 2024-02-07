@@ -1,6 +1,6 @@
 # sl-vue-tree-next
 
-Customizable draggable tree component for Vue.js
+Vue3 supported version of sl-vue-tree. A customizable draggable tree component for Vue.js.
 
 ![preview](preview.png)
 
@@ -14,40 +14,62 @@ install
 # Quick start
 ````html
 
-<div id="app">
-  <sl-vue-tree-next v-model="nodes"/>
-</div>
+<template>
+    <h2>Vue 3 Tree</h2>
+    <sl-vue-tree-next
+        v-model="nodes"
+        :allow-multiselect="true"
+    >
+    </sl-vue-tree-next>
 
-<link rel="stylesheet" href="dist/sl-vue-tree-next-dark.css">
-<script src="dist/sl-vue-tree-next.js"></script>
+</template>
 
+<script setup lang="ts">
+import { ref } from 'vue'
+import { SlVueTreeNext } from 'sl-vue-tree-next'
+
+const nodes = [
+    { title: 'Item1', isLeaf: true },
+    { title: 'Item2', isLeaf: true, data: { visible: false } },
+    { title: 'Folder1' },
+    {
+        title: 'Folder2',
+        isExpanded: true,
+        children: [
+            { title: 'Item3', isLeaf: true },
+            { title: 'Item4', isLeaf: true },
+            {
+                title: 'Folder3',
+                children: [{ title: 'Item5', isLeaf: true }],
+            },
+        ],
+    },
+    { title: 'Folder5', isExpanded: false },
+    { title: 'Item6', isLeaf: true },
+    { title: 'Item7', isLeaf: true, data: { visible: false } },
+    {
+        title: 'Folder6',
+        children: [
+            {
+                title: 'Folder7',
+                children: [
+                    { title: 'Item8', isLeaf: true },
+                    { title: 'Item9', isLeaf: true },
+                ],
+            },
+        ],
+    },
+]
 <script>
 
-  var nodes = [
-    {title: 'Item1', isLeaf: true},
-    {title: 'Item2', isLeaf: true, data: { visible: false }},
-    {title: 'Folder1'},
-    {
-      title: 'Folder2', isExpanded: true, children: [
-        {title: 'Item3', isLeaf: true},
-        {title: 'Item4', isLeaf: true}
-      ]
-    }
-  ];
-
-  new Vue({
-    el: '#app',
-    components: { SlVueTree },
-    data: function () {
-     return {
-       nodes: nodes
-     }
-    }
-  });
-
-</script>
-
+<style>
+  @import 'sl-vue-tree-next/sl-vue-tree-next-minimal.css';
+</style>
 ````
+You can also use dark version.
+```
+  @import 'sl-vue-tree-next/sl-vue-tree-next-dark.css';
+```
 
 The `value` property is an array of `NodeModel` nodes:
 
@@ -75,11 +97,11 @@ interface TreeNode<TDataType> extends NodeModel<TDataType> {
     ind: number; // index in the array of siblings
     path: number[]; // path to node as array of indexes, for example [2, 0, 1] in the example above is path to `Item4`
     pathStr: string; // serialized path to node
-    children: Node<TDataType>[];
+    children: TreeNode<TDataType>[];
 }
 ````
 
-You can get the list of `Node` from the computed `slVueTree.nodes` property
+You can get the list of `Node` from the computed `slVueTree.currentNodes` property
 
 
 
@@ -99,7 +121,7 @@ You can get the list of `Node` from the computed `slVueTree.nodes` property
 
 | prop           | type            | description                                                                                                                                                                                                                                                     |
 |----------------|-----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| nodes          | Node[]   | List of nodes with some computed props. See `Node` interface.                                                                                                                                                                                            |
+| currentNodes          | TreeNode[]   | List of nodes with some computed props. See `Node` interface.                                                                                                                                                                                            |
 | cursorPosition | ICursorPosition | Represents the current cursor position that describes the action that will be applied to the dragged node on `mouseup` event. See `ICursorPosition` interface |
 | selectionSize  | Number          | The count of selected nodes
 | dragSize       | Number          | The count of selected and draggable nodes
@@ -117,12 +139,12 @@ interface ICursorPosition<TDataType> {
 | event           | callback arguments                                                         | description                                       |
 |-----------------|----------------------------------------------------------------------------|---------------------------------------------------|
 | input           | nodes: NodeModel[]                                                  | triggers for any changes to `value` property     |
-| select          | selectedNodes: Node[], event: MouseEvent                            | triggers when a node has been selected/deselected |
-| toggle          | toggledNode: Node, event: MouseEvent                                | triggers when a node has been collapsed/expanded  |
-| drop            | draggingNodes: Node[], position: ICursorPosition, event: MouseEvent | triggers when dragging nodes have been dropped    |
-| nodeclick       | node: Node, event: MouseEvent                                       | handle `click` event on node                      |
-| nodedblclick    | node: Node, event: MouseEvent                                       | handle `dblclick` event on node                   |
-| nodecontextmenu | node: Node, event: MouseEvent                                       | handle `contextmenu` event on node                |
+| select          | selectedNodes: TreeNode[], event: MouseEvent                            | triggers when a node has been selected/deselected |
+| toggle          | toggledNode: TreeNode, event: MouseEvent                                | triggers when a node has been collapsed/expanded  |
+| drop            | draggingNodes: TreeNode[], position: ICursorPosition, event: MouseEvent | triggers when dragging nodes have been dropped    |
+| nodeclick       | node: TreeNode, event: MouseEvent                                       | handle `click` event on node                      |
+| nodedblclick    | node: TreeNode, event: MouseEvent                                       | handle `dblclick` event on node                   |
+| nodecontextmenu | node: TreeNode, event: MouseEvent                                       | handle `contextmenu` event on node                |
 | externaldrop    | cursorPosition: ICursorPosition, event: MouseEvent                         | handle `drop` event for external items [demo](https://holiber.github.io/sl-vue-tree-next/demo/externaldrag)             |
 
 # Methods
@@ -130,29 +152,29 @@ interface ICursorPosition<TDataType> {
 
 | method                                                                                                   | description                                                                                        |
 |----------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------|
-| getNode(path: number[]): Node                                                                     | Find the node by using its path                                                                   |
-| traverse(cb: (node: Node, nodeModel: NodeModel, siblings: NodeModel[])  => boolean) | Helpful method to traverse all nodes. The traversing will be stopped if callback returns `false`.  |
+| getNode(path: number[]): TreeNode                                                                     | Find the node by using its path                                                                   |
+| traverse(cb: (node: TreeNode, nodeModel: NodeModel, siblings: NodeModel[])  => boolean) | Helpful method to traverse all nodes. The traversing will be stopped if callback returns `false`.  |
 | updateNode(path: number[], patch: Partial<NodeModel>)                                             | Update the node by using its path                                                                 |
 | select(path: number[], addToSelection = false)                                                           | Select the node by using its path                                                                 |                                                                                                                                              |
 | getNodeEl(): HTMLElement                                                                                 | Get the node HTMLElement by using its path                                                        |
-| getSelected(): Node[]                                                                             | Get selected nodes                                                                                 |
+| getSelected(): TreeNode[]                                                                             | Get selected nodes                                                                                 |
 | insert(position: ICursorPosition, nodeModel: NodeModel)                                           | Insert nodes by the current cursor position.                                                       |
 | remove(paths: number[][])                                                                                | Remove nodes by paths. For example `.remove([[0,1], [0,2]])`
-| getFirstNode(): Node                                                                              | Get the first node in the tree                                                                     |
-| getLastNode(): Node                                                                               | Get the last node in the tree
-| getNextNode(path: number[], filter?: (node: Node<TDataType>) => boolean): Node<TDataType>; | Get the next node. You can skip the next nodes by using `filter`
-| getPrevNode(path: number[], filter?: (node: Node<TDataType>) => boolean): Node<TDataType>; | Get the previous node. You can skip the previous nodes by using `filter`
+| getFirstNode(): TreeNode                                                                              | Get the first node in the tree                                                                     |
+| getLastNode(): TreeNode                                                                               | Get the last node in the tree
+| getNextNode(path: number[], filter?: (node: TreeNode<TDataType>) => boolean): TreeNode<TDataType>; | Get the next node. You can skip the next nodes by using `filter`
+| getPrevNode(path: number[], filter?: (node: TreeNode<TDataType>) => boolean): TreeNode<TDataType>; | Get the previous node. You can skip the previous nodes by using `filter`
 
 # Slots
 
 
 | slot       | context     | description                                                                                   |
 |------------|-------------|-----------------------------------------------------------------------------------------------|
-| title      | Node | Slot for item title                                                                           |
-| toggle     | Node | Slot for expand/collapse button                                                               |
-| sidebar    | Node | Sidebar content                                                                               |
+| title      | TreeNode | Slot for item title                                                                           |
+| toggle     | TreeNode | Slot for expand/collapse button                                                               |
+| sidebar    | TreeNode | Sidebar content                                                                               |
 | draginfo   | SlVueTree   | Slot that follows the mouse cursor while dragging. By default shows the dragging nodes count. |
-| empty-node | Node | Slot for (optional) message when folder is open, but empty                                    |
+| empty-node | TreeNode | Slot for (optional) message when folder is open, but empty                                    |
 
 
 # Examples
@@ -161,7 +183,7 @@ interface ICursorPosition<TDataType> {
 ## Add a folder or item icon via `title` slot
 ````html
 <sl-vue-tree-next v-model="nodes">
-    <template slot="title" slot-scope="{ node }">
+    <template #title="{ node }">
 
       <span class="item-icon">
         <i class="fa fa-file" v-if="node.isLeaf"></i>
@@ -189,5 +211,18 @@ slVueTree.traverse((node, nodeModel, path) => {
 [see CONTRIBUTING.md](CONTRIBUTING.md)
 
 # Changelog
+v0.0.5
+  - fix computed warnings in console
+  - fixed duplicate nodes bug
+
+v0.0.4
+  - made minimal and dark css available
+
+v0.0.3
+  - removed vue from dependency and added to peer dependency
+
+v0.0.2
+  - added type safety to props and methods
+
 v0.0.1
-- migrated to vue 3
+  - migrated to vue 3

@@ -549,8 +549,8 @@ const onMouseleaveHandler = (event) => {
     }
 }
 
-const getNodeEl = (path) => {
-    getRoot().ref.value.querySelector(`[path="${JSON.stringify(path)}"]`)
+const getNodeEl = (path: number[]): HTMLElement => {
+    return getRoot().ref.value.querySelector(`[path="${JSON.stringify(path)}"]`)
 }
 
 const getLastNode = () => {
@@ -565,7 +565,7 @@ const getFirstNode = () => {
     return getNode([0])
 }
 
-const getNextNode = (path, filter: any = null) => {
+const getNextNode = (path: number[], filter?: (node: TreeNode) => boolean): TreeNode => {
     let resultNode = null
 
     traverse((node) => {
@@ -580,8 +580,8 @@ const getNextNode = (path, filter: any = null) => {
     return resultNode
 }
 
-const getPrevNode = (path, filter: any) => {
-    let prevNodes: NodeModel[] = []
+const getPrevNode = (path: number[], filter?: (node: TreeNode) => boolean) => {
+    let prevNodes: TreeNode[] = []
 
     traverse((node) => {
         if (comparePaths(node.path, path) >= 0) {
@@ -900,6 +900,14 @@ const currentContext: Context = {
     onMousemoveHandler,
     getCursorPositionFromCoords,
     updateNode,
+    getNode,
+    traverse,
+    select,
+    getNodeEl,
+    getFirstNode,
+    getLastNode,
+    getNextNode,
+    getPrevNode,
     getSelected,
     insert,
     remove,
