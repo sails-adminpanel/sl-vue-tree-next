@@ -341,7 +341,7 @@ const isVisible = (path) => {
 }
 
 const emitInput = (newValue) => {
-    Object.assign(currentValue.value, newValue)
+    currentValue.value = newValue
     getRoot().emit('update:modelValue', newValue)
 }
 
