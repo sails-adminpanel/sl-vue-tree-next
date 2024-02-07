@@ -1,3 +1,5 @@
+import { ComputedRef, Ref } from "vue"
+
 export interface NodeModel {
     title: string
     isLeaf?: boolean
@@ -37,8 +39,25 @@ export interface SlVueTreeProps {
     showBranches?: boolean
     level?: number
     parentInd?: number
-    parentContext?: any
+    parentContext?: Context
     rootContext?: any
     allowToggleBranch?: boolean
 }
 
+export interface Context {
+    getRoot: () => TreeNode
+    setCursorPosition: (cursorPosition: CursorPosition) => void
+    currentNodes: ComputedRef<TreeNode[]>
+    cursorPosition: ComputedRef<CursorPosition>
+    emit: (event: string, ...args: any[]) => void
+    ref: any
+    onNodeMousedownHandler: (event: MouseEvent, node: TreeNode) => void
+    onNodeMouseupHandler: (event: MouseEvent, node: TreeNode) => void
+    onMousemoveHandler: (event: MouseEvent) => void
+    getCursorPositionFromCoords: (x: number, y: number) => CursorPosition
+    updateNode: (val: { path: number[], patch: Partial<TreeNode>}) => void
+    getSelected: () => TreeNode[]
+    insert: (node: TreeNode, data: NodeModel, placement: 'before' | 'inside' | 'after') => void
+    remove: (node: TreeNode) => void
+    rootCursorPosition: Ref<CursorPosition>
+}

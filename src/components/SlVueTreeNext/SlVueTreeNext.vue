@@ -9,7 +9,7 @@
         <div ref="nodes" class="sl-vue-tree-next-nodes-list">
             <div
                 class="sl-vue-tree-next-node"
-                v-for="(node, nodeInd) in nodes"
+                v-for="(node, nodeInd) in currentNodes"
                 :class="{ 'sl-vue-tree-next-selected': node.isSelected }"
             >
                 <div
@@ -156,7 +156,7 @@
 
 <script setup lang="ts">
 import { ref, defineEmits, onMounted, onBeforeUnmount, watchEffect, computed, defineExpose } from 'vue'
-import type { NodeModel, TreeNode, SlVueTreeProps, CursorPosition } from './types'
+import type { NodeModel, TreeNode, SlVueTreeProps, CursorPosition, Context } from './types'
 
 // props
 const props = withDefaults(defineProps<SlVueTreeProps>(), {
@@ -192,7 +192,7 @@ const dragInfoRef = ref<HTMLDivElement>()
 const rootRef = ref<HTMLDivElement>()
 
 // data
-const rootCursorPosition = ref<CursorPosition | null>(null)
+const rootCursorPosition = ref<CursorPosition>(null)
 const scrollIntervalId = ref(0)
 const scrollSpeed = ref(0)
 const lastSelectedNode = ref<TreeNode | null>(null)
@@ -225,7 +225,7 @@ const depth = computed(() => {
     return gaps.value.length
 })
 
-const nodes = computed(() => {
+const currentNodes = computed<TreeNode[]>(() => {
     if (isRoot.value) {
         const nodeModels = copy(currentValue.value)
         const n = getNodes(nodeModels)
@@ -234,7 +234,7 @@ const nodes = computed(() => {
 
     if (props.parentInd === null) return []
 
-    const n = getParent()?.nodes?.value?.[props.parentInd]?.children
+    const n = getParent()?.currentNodes?.value?.[props.parentInd]?.children
     return n
 })
 
@@ -392,7 +392,7 @@ const onDragEndHandler = (node, event) => {
     console.log('onDragEndHandler', node, event)
 }
 
-const select = (path, addToSelection = false, event: KeyboardEvent | null = null) => {
+const select = (path, addToSelection = false, event: MouseEvent | null = null) => {
     const multiselectKeys = Array.isArray(props.multiselectKey) ? props.multiselectKey : [props.multiselectKey]
     const multiselectKeyIsPressed = event && !!multiselectKeys.find((key) => event[key])
     addToSelection = (multiselectKeyIsPressed || addToSelection) && props.allowMultiselect
@@ -542,7 +542,8 @@ const onMouseleaveHandler = (event) => {
     const $root = getRoot().ref.value
     const rootRect = $root.getBoundingClientRect()
     if (event.clientY >= rootRect.bottom) {
-        setCursorPosition({ node: nodes.value.slice(-1)[0], placement: 'after' })
+        const nodesCopy = structuredClone(currentNodes.value)
+        setCursorPosition({ node: nodesCopy[0], placement: 'after' })
     } else if (event.clientY < rootRect.top) {
         setCursorPosition({ node: getFirstNode(), placement: 'before' })
     }
@@ -657,7 +658,7 @@ const onDocumentMouseupHandler = (event) => {
     if (isDragging.value) onNodeMouseupHandler(event)
 }
 
-const onNodeMouseupHandler = (event, targetNode: TreeNode | null = null) => {
+const onNodeMouseupHandler = (event: MouseEvent, targetNode: TreeNode | null = null) => {
     // handle only left mouse button
     if (event.button !== 0) return
 
@@ -887,10 +888,10 @@ const copy = (entity) => {
 }
 
 // context
-const currentContext = {
+const currentContext: Context = {
     getRoot,
     setCursorPosition,
-    nodes,
+    currentNodes,
     cursorPosition,
     emit,
     ref: rootRef,
@@ -902,7 +903,7 @@ const currentContext = {
     getSelected,
     insert,
     remove,
-    rootCursorPosition
+    rootCursorPosition,
 }
 
 // needed for access through refs. https://vuejs.org/guide/typescript/composition-api#typing-component-template-refs
