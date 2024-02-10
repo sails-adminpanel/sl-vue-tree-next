@@ -2,11 +2,10 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
-        <title>sl-vue-tree-next</title>
+        <title>sl-vue-tree</title>
         <link rel="stylesheet" href="../dist/sl-vue-tree-next-minimal.css" />
         <link href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" rel="stylesheet" />
         <script src="https://unpkg.com/vue@3.4.18/dist/vue.global.js"></script>
-        <script src="https://www.unpkg.com/sl-vue-tree-next@0.0.8/dist/sl-vue-tree-next.umd.cjs" type="module"></script>
     </head>
     <body>
         <div id="app">
@@ -16,7 +15,7 @@
 
             <div class="row">
                 <div class="tree-container">
-                    <sl-vue-tree-next v-model="nodes" :show-branches="true" />
+                    <sl-vue-tree-next v-model="nodes" :show-branches="true"></sl-vue-tree-next>
                 </div>
 
                 <div class="json-preview">
@@ -26,6 +25,8 @@
         </div>
 
         <script type="module">
+            import { SlVueTreeNext } from '../public/sl-vue-tree-next.global.js'
+
             var nodes = [
                 { title: 'Item1', isLeaf: true },
                 { title: 'Item2', isLeaf: true, data: { visible: false } },
@@ -59,31 +60,20 @@
                 },
             ]
 
-            const { createApp } = Vue
-
-            const app = createApp({
-                components: {
-                    SlVueTreeNext
-                },
-                setup() {
+            Vue.createApp({
+                components: { SlVueTreeNext },
+                data: function () {
                     return {
-                        nodes,
+                        nodes: nodes,
+                        lastEvent: 'No last event',
                     }
                 },
-            })
-
-            app.mount('#app')
+            }).mount('#app')
         </script>
 
         <style>
             body {
-                background: #050d12;
                 font-family: Arial;
-                color: rgba(255, 255, 255, 0.5);
-            }
-
-            a {
-                color: #bbb;
             }
 
             .row {
@@ -98,7 +88,6 @@
             .json-preview {
                 flex-grow: 1;
                 margin-left: 10px;
-                background-color: #13242d;
                 border: 1px solid black;
                 padding: 10px;
             }
