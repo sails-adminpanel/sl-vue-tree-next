@@ -4,7 +4,7 @@ Vue3 supported version of sl-vue-tree. A customizable draggable tree component f
 
 ![preview](preview.png)
 
-[demo](https://kcsujeet.github.io/sl-vue-tree-next/demo/index)
+[demo](https://kcsujeet.github.io/sl-vue-tree-next/demo/index.html)
 
 install
 
@@ -142,7 +142,7 @@ interface ICursorPosition<TDataType> {
 | nodeclick       | node: TreeNode, event: MouseEvent                                       | handle `click` event on node                      |
 | nodedblclick    | node: TreeNode, event: MouseEvent                                       | handle `dblclick` event on node                   |
 | nodecontextmenu | node: TreeNode, event: MouseEvent                                       | handle `contextmenu` event on node                |
-| externaldrop    | cursorPosition: ICursorPosition, event: MouseEvent                         | handle `drop` event for external items [demo](https://kcsujeet.github.io/sl-vue-tree-next/demo/externaldrag)             |
+| externaldrop    | cursorPosition: ICursorPosition, event: MouseEvent                         | handle `drop` event for external items [demo](https://kcsujeet.github.io/sl-vue-tree-next/demo/externaldrag.html)             |
 
 # Methods
 
@@ -210,7 +210,7 @@ slVueTree.traverse((node, nodeModel, path) => {
 # Changelog
 v0.0.8
 - update demos
-- 
+-
 
 v0.0.7
   - add support for generics
