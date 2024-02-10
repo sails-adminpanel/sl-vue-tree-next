@@ -1,109 +1,107 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>sl-vue-tree-next</title>
-  <link rel="stylesheet" href="../dist/sl-vue-tree-next-minimal.css">
-  <link href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
-  <script src="../dist/sl-vue-tree-next.js"></script>
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8" />
+        <title>sl-vue-tree-next</title>
+        <link rel="stylesheet" href="../dist/sl-vue-tree-next-minimal.css" />
+        <link href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" rel="stylesheet" />
+        <script src="https://unpkg.com/vue@3.4.18/dist/vue.global.js"></script>
+        <script src="https://www.unpkg.com/sl-vue-tree-next@0.0.8/dist/sl-vue-tree-next.umd.cjs" type="module"></script>
+    </head>
+    <body>
+        <div id="app">
+            <h2>Sl-vue-tree-next - minimal css</h2>
 
-<div id="app">
+            <a href="./minimal-theme.html" target="_blank">Source code</a>
 
-  <h2> Sl-vue-tree-next - minimal css</h2>
+            <div class="row">
+                <div class="tree-container">
+                    <sl-vue-tree-next v-model="nodes" :show-branches="true" />
+                </div>
 
-  <a href="./minimal-theme.html" target="_blank">Source code</a>
+                <div class="json-preview">
+                    <pre>{{ JSON.stringify(nodes, null, 4)}}</pre>
+                </div>
+            </div>
+        </div>
 
+        <script type="module">
+            var nodes = [
+                { title: 'Item1', isLeaf: true },
+                { title: 'Item2', isLeaf: true, data: { visible: false } },
+                { title: 'Folder1' },
+                {
+                    title: 'Folder2',
+                    isExpanded: true,
+                    children: [
+                        { title: 'Item3', isLeaf: true },
+                        { title: 'Item4', isLeaf: true },
+                        {
+                            title: 'Folder3',
+                            children: [{ title: 'Item5', isLeaf: true }],
+                        },
+                    ],
+                },
+                { title: 'Folder5', isExpanded: false },
+                { title: 'Item6', isLeaf: true },
+                { title: 'Item7', isLeaf: true, data: { visible: false } },
+                {
+                    title: 'Folder6',
+                    children: [
+                        {
+                            title: 'Folder7',
+                            children: [
+                                { title: 'Item8', isLeaf: true },
+                                { title: 'Item9', isLeaf: true },
+                            ],
+                        },
+                    ],
+                },
+            ]
 
-  <div class="row">
-    <div class="tree-container">
-      <sl-vue-tree-next v-model="nodes" :show-branches="true"></sl-vue-tree-next>
-    </div>
+            const { createApp } = Vue
 
-    <div class="json-preview">
-      <pre>{{ JSON.stringify(nodes, null, 4)}}</pre>
-    </div>
-  </div>
+            const app = createApp({
+                components: {
+                    SlVueTreeNext
+                },
+                setup() {
+                    return {
+                        nodes,
+                    }
+                },
+            })
 
+            app.mount('#app')
+        </script>
 
-</div>
+        <style>
+            body {
+                background: #050d12;
+                font-family: Arial;
+                color: rgba(255, 255, 255, 0.5);
+            }
 
-<script>
-  var nodes = [
-    {title: 'Item1', isLeaf: true},
-    {title: 'Item2', isLeaf: true, data: { visible: false }},
-    {title: 'Folder1'},
-    {
-      title: 'Folder2', isExpanded: true, children: [
-        {title: 'Item3', isLeaf: true},
-        {title: 'Item4', isLeaf: true},
-        {
-          title: 'Folder3', children: [
-            {title: 'Item5', isLeaf: true}
-          ]
-        }
-      ]
-    },
-    {title: 'Folder5', isExpanded: false},
-    {title: 'Item6', isLeaf: true},
-    {title: 'Item7', isLeaf: true, data: { visible: false }},
-    {
-      title: 'Folder6', children: [
-        {
-          title: 'Folder7', children: [
-            {title: 'Item8', isLeaf: true},
-            {title: 'Item9', isLeaf: true}
-          ]
-        }
-      ]
-    }
-  ];
+            a {
+                color: #bbb;
+            }
 
-  new Vue({
-    el: '#app',
-    components: { SlVueTree: SlVueTree },
-    data: function () {
-      return {
-        nodes: nodes,
-        lastEvent: 'No last event'
-      }
-    }
-  })
-</script>
+            .row {
+                display: flex;
+                margin-bottom: 10px;
+            }
 
-<style>
+            .tree-container {
+                flex-grow: 1;
+            }
 
-  body {
-    background: #050d12;
-    font-family: Arial;
-    color: rgba(255, 255, 255, 0.5);
-  }
-
-  a {
-    color: #bbb;
-  }
-
-  .row {
-    display: flex;
-    margin-bottom: 10px;
-  }
-
-  .tree-container {
-    flex-grow: 1;
-  }
-
-
-  .json-preview {
-    flex-grow: 1;
-    margin-left: 10px;
-    background-color: #13242d;
-    border: 1px solid black;
-    padding: 10px;
-  }
-
-</style>
-
-</body>
+            .json-preview {
+                flex-grow: 1;
+                margin-left: 10px;
+                background-color: #13242d;
+                border: 1px solid black;
+                padding: 10px;
+            }
+        </style>
+    </body>
 </html>

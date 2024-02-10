@@ -4,7 +4,7 @@ Vue3 supported version of sl-vue-tree. A customizable draggable tree component f
 
 ![preview](preview.png)
 
-[demo](https://holiber.github.io/sl-vue-tree-next/demo/index)
+[demo](https://kcsujeet.github.io/sl-vue-tree-next/demo/index)
 
 install
 
@@ -16,16 +16,11 @@ install
 
 <template>
     <h2>Vue 3 Tree</h2>
-    <sl-vue-tree-next
-        v-model="nodes"
-        :allow-multiselect="true"
-    >
-    </sl-vue-tree-next>
+    <sl-vue-tree-next v-model="nodes" />
 
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 import { SlVueTreeNext } from 'sl-vue-tree-next'
 
 const nodes = [
@@ -147,7 +142,7 @@ interface ICursorPosition<TDataType> {
 | nodeclick       | node: TreeNode, event: MouseEvent                                       | handle `click` event on node                      |
 | nodedblclick    | node: TreeNode, event: MouseEvent                                       | handle `dblclick` event on node                   |
 | nodecontextmenu | node: TreeNode, event: MouseEvent                                       | handle `contextmenu` event on node                |
-| externaldrop    | cursorPosition: ICursorPosition, event: MouseEvent                         | handle `drop` event for external items [demo](https://holiber.github.io/sl-vue-tree-next/demo/externaldrag)             |
+| externaldrop    | cursorPosition: ICursorPosition, event: MouseEvent                         | handle `drop` event for external items [demo](https://kcsujeet.github.io/sl-vue-tree-next/demo/externaldrag)             |
 
 # Methods
 

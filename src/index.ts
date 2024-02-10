@@ -1,3 +1,13 @@
 import { SlVueTreeNext } from '@/components/SlVueTreeNext'
 
-export { SlVueTreeNext }
+const install = () => {
+    globalThis.SlVueTreeNext = SlVueTreeNext
+}
+
+if (globalThis.Vue) {
+    install()
+}
+
+export { install }
+
+export default { SlVueTreeNext }
