@@ -1,26 +1,52 @@
 <template>
     <h2>Vue 3 Tree</h2>
-    <sl-vue-tree-next
-        :model-value="nodes"
-        ref="slVueTree"
-        :allow-multiselect="true"
-        @select="nodeSelected"
-        @drop="nodeDropped"
-        @toggle="nodeToggled"
-    >
-    </sl-vue-tree-next>
+    <div class="last-event row">Last event: {{ lastEvent }}</div>
+
+    <div class="row">
+        <div class="col-6">
+            <sl-vue-tree-next
+                v-model="nodes"
+                ref="slVueTree"
+                :allow-multiselect="true"
+                @select="nodeSelected"
+                @drop="nodeDropped"
+                @toggle="nodeToggled"
+            >
+                <template #title="{ node }">
+                    <span class="item-icon">
+                        <i class="fa-solid fa-file" v-if="node.isLeaf"></i>
+                        <i class="fa-solid fa-folder" v-if="!node.isLeaf"></i>
+                    </span>
+
+                    {{ node.title }}
+                </template>
+                <template #toggle="{ node }">
+                    <span v-if="!node.isLeaf">
+                        <i v-if="node.isExpanded" class="fa fa-chevron-down"></i>
+                        <i v-if="!node.isExpanded" class="fa fa-chevron-right"></i>
+                    </span>
+                </template>
+            </sl-vue-tree-next>
+        </div>
+
+        <div class="col-6">
+            <div class="json-preview">
+                <pre>{{ JSON.stringify(nodes, null, 4) }}</pre>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import { SlVueTreeNext } from './components/SlVueTreeNext'
-import type { Context } from './components/SlVueTreeNext';
+import type { Context } from './components/SlVueTreeNext'
 
 interface DataType {
     visible?: boolean
 }
 
-const nodes = [
+const nodes = ref([
     { title: 'Item1', isLeaf: true },
     { title: 'Item2', isLeaf: true, data: { visible: false } },
     { title: 'Folder1' },
@@ -51,7 +77,7 @@ const nodes = [
             },
         ],
     },
-]
+])
 
 // data
 const selectedNodesTitle = ref('')
@@ -101,5 +127,32 @@ const removeNode = () => {
 }
 .logo.vue:hover {
     filter: drop-shadow(0 0 2em #42b883aa);
+}
+
+.row {
+    display: flex;
+}
+
+.col-6 {
+    flex-grow: 1;
+    max-width: 50%;
+    position: relative;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.json-preview {
+    padding: 1em;
+    background-color: #f8f9fa;
+    border-radius: 0.25em;
+    overflow: auto;
+}
+
+.last-event {
+    color: white;
+    background-color: rgba(100, 100, 255, 0.5);
+    padding: 10px;
+    border-radius: 2px;
+    margin-bottom: 10px;
 }
 </style>

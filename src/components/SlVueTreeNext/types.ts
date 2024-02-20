@@ -9,6 +9,7 @@ export interface NodeModel<T> {
     isDraggable?: boolean
     isSelectable?: boolean
     data?: T
+    toBeDeleted?: boolean
 }
 
 export interface TreeNode<T> extends NodeModel<T> {

@@ -104,11 +104,11 @@
                     @update-node="updateNode"
                     @dragover.prevent
                 >
-                    <template slot="title" slot-scope="{ node }">
+                    <template #title="{ node }">
                         <slot name="title" :node="node">{{ node.title }}</slot>
                     </template>
 
-                    <template slot="toggle" slot-scope="{ node }">
+                    <template #toggle="{ node }">
                         <slot name="toggle" :node="node">
                             <span>
                                 {{ !node.isLeaf ? (node.isExpanded ? '-' : '+') : '' }}
@@ -116,11 +116,11 @@
                         </slot>
                     </template>
 
-                    <template slot="sidebar" slot-scope="{ node }">
+                    <template #sidebar="{ node }">
                         <slot name="sidebar" :node="node"></slot>
                     </template>
 
-                    <template slot="empty-node" slot-scope="{ node }">
+                    <template #empty-node="{ node }">
                         <slot
                             name="empty-node"
                             :node="node"
@@ -155,7 +155,7 @@
 </template>
 
 <script setup lang="ts" generic="T">
-import { ref, defineEmits, onMounted, onBeforeUnmount, watchEffect, computed, defineExpose, Ref } from 'vue'
+import { ref, onMounted, onBeforeUnmount, watchEffect, computed, Ref } from 'vue'
 import type { NodeModel, TreeNode, SlVueTreeProps, CursorPosition, Context } from './types'
 
 // props
@@ -719,7 +719,7 @@ const onNodeMouseupHandler = (event: MouseEvent, targetNode: TreeNode<T> | null 
     // mark dragging model to delete
     for (let draggingNodeModel of nodeModelsSubjectToInsert) {
         nodeModelsToInsert.push(copy(draggingNodeModel))
-        draggingNodeModel['_markToDelete'] = true
+        draggingNodeModel['toBeDeleted'] = true
     }
 
     // insert dragging nodes to the new place
@@ -727,7 +727,7 @@ const onNodeMouseupHandler = (event: MouseEvent, targetNode: TreeNode<T> | null 
 
     // delete dragging node from the old place
     traverseModels((nodeModel, siblings, ind) => {
-        if (!nodeModel._markToDelete) return
+        if (!nodeModel.toBeDeleted) return
         siblings.splice(ind, 1)
     }, newNodes)
 
@@ -770,6 +770,7 @@ const getNodeSiblings = (nodes, path): TreeNode<T>[] => {
 const updateNode = ({ path, patch }) => {
     if (!isRoot.value) {
         emit('updateNode', { path, patch })
+        return
     }
 
     const pathStr = JSON.stringify(path)
@@ -777,6 +778,7 @@ const updateNode = ({ path, patch }) => {
     traverse((node, nodeModel) => {
         if (node.pathStr !== pathStr) return
         Object.assign(nodeModel, patch)
+        return false // stop traverse because we found the node.
     }, newNodes)
 
     emitInput(newNodes)
@@ -799,11 +801,11 @@ const getDraggable = () => {
 }
 
 const traverse = (
-    cb,
+    callback: (node: TreeNode<T>, nodeModel: NodeModel<T>, siblings: NodeModel<T>[]) => boolean | void,
     nodeModels: NodeModel<T>[] | null = null,
     parentPath: number[] = [],
 ): NodeModel<T>[] | boolean => {
-    if (!nodeModels) nodeModels = currentValue.value as NodeModel<T>[]
+    if (!nodeModels) nodeModels = currentValue.value
 
     let shouldStop = false
 
@@ -813,7 +815,7 @@ const traverse = (
         const nodeModel = nodeModels[nodeInd]
         const itemPath = parentPath.concat(nodeInd)
         const node = getNode(itemPath, nodeModel, nodeModels)
-        shouldStop = cb(node, nodeModel, nodeModels) === false
+        shouldStop = callback(node, nodeModel, nodeModels) === false
         if (node) {
             nodes.push(node)
         }
@@ -821,7 +823,7 @@ const traverse = (
         if (shouldStop) break
 
         if (nodeModel.children) {
-            shouldStop = traverse(cb, nodeModel.children, itemPath) === false
+            shouldStop = traverse(callback, nodeModel.children, itemPath) === false
             if (shouldStop) break
         }
     }
@@ -829,12 +831,12 @@ const traverse = (
     return !shouldStop ? nodes : false
 }
 
-const traverseModels = (cb, nodeModels) => {
+const traverseModels = (callback, nodeModels) => {
     let i = nodeModels.length
     while (i--) {
         const nodeModel = nodeModels[i]
-        if (nodeModel.children) traverseModels(cb, nodeModel.children)
-        cb(nodeModel, nodeModels, i)
+        if (nodeModel.children) traverseModels(callback, nodeModel.children)
+        callback(nodeModel, nodeModels, i)
     }
     return nodeModels
 }
@@ -844,12 +846,12 @@ const remove = (paths) => {
     const newNodes = copy(currentValue.value)
     traverse((node, nodeModel, siblings) => {
         for (const pathStr of pathsStr) {
-            if (node.pathStr === pathStr) nodeModel._markToDelete = true
+            if (node.pathStr === pathStr) nodeModel.toBeDeleted = true
         }
     }, newNodes)
 
     traverseModels((nodeModel, siblings, ind) => {
-        if (!nodeModel._markToDelete) return
+        if (!nodeModel.toBeDeleted) return
         siblings.splice(ind, 1)
     }, newNodes)
 

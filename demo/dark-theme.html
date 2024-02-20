@@ -4,7 +4,13 @@
         <meta charset="UTF-8" />
         <title>sl-vue-tree-next</title>
         <link rel="stylesheet" href="../public/sl-vue-tree-next-dark.css" />
-        <link href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" rel="stylesheet" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+            integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        />
         <script src="https://unpkg.com/vue@3.4.18/dist/vue.global.js"></script>
     </head>
     <body>
@@ -27,30 +33,30 @@
                         @toggle="nodeToggled"
                         @nodecontextmenu="showContextMenu"
                     >
-                        <template slot="title" slot-scope="{ node }">
+                        <template #title="{ node }">
                             <span class="item-icon">
-                                <i class="fa fa-file" v-if="node.isLeaf"></i>
-                                <i class="fa fa-folder" v-if="!node.isLeaf"></i>
+                                <i class="fa-solid fa-file" v-if="node.isLeaf"></i>
+                                <i class="fa-solid fa-folder" v-if="!node.isLeaf"></i>
                             </span>
 
                             {{ node.title }}
                         </template>
 
-                        <template slot="toggle" slot-scope="{ node }">
+                        <template #toggle="{ node }">
                             <span v-if="!node.isLeaf">
                                 <i v-if="node.isExpanded" class="fa fa-chevron-down"></i>
                                 <i v-if="!node.isExpanded" class="fa fa-chevron-right"></i>
                             </span>
                         </template>
 
-                        <template slot="sidebar" slot-scope="{ node }">
+                        <template #sidebar="{ node }">
                             <span class="visible-icon" @click="event => toggleVisibility(event, node)">
                                 <i v-if="!node.data || node.data.visible !== false" class="fa fa-eye"></i>
                                 <i v-if="node.data && node.data.visible === false" class="fa fa-eye-slash"></i>
                             </span>
                         </template>
 
-                        <template slot="draginfo"> {{selectedNodesTitle}} </template>
+                        <template #draginfo="draginfo"> {{selectedNodesTitle}} </template>
                     </sl-vue-tree-next>
                 </div>
 
@@ -68,7 +74,7 @@
         <script type="module">
             import { SlVueTreeNext } from '../public/sl-vue-tree-next.global.js'
 
-            var nodes = [
+            const nodes = [
                 { title: 'Item1', isLeaf: true },
                 { title: 'Item2', isLeaf: true, data: { visible: false } },
                 { title: 'Folder1' },

@@ -208,9 +208,16 @@ slVueTree.traverse((node, nodeModel, path) => {
 [see CONTRIBUTING.md](CONTRIBUTING.md)
 
 # Changelog
+v0.0.10
+- fixes lower level icons not appearing bug
+- fixes node update bug
+
+v0.0.9
+- update demo
+- update readme
+
 v0.0.8
 - update demos
--
 
 v0.0.7
   - add support for generics
