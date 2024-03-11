@@ -1,10 +1,10 @@
-const Ue = window.Vue.defineComponent, ye = window.Vue.renderList, be = window.Vue.Fragment, h = window.Vue.openBlock, w = window.Vue.createElementBlock, ee = window.Vue.withModifiers, Ve = window.Vue.normalizeStyle, y = window.Vue.createElementVNode, N = window.Vue.renderSlot, x = window.Vue.toDisplayString, b = window.Vue.createCommentVNode, te = window.Vue.createTextVNode, oe = window.Vue.normalizeClass, je = window.Vue.resolveComponent, A = window.Vue.withCtx, qe = window.Vue.createBlock, We = window.Vue.vShow, Ge = window.Vue.withDirectives, Qe = {
+const Ue = window.Vue.defineComponent, be = window.Vue.renderList, Ve = window.Vue.Fragment, h = window.Vue.openBlock, w = window.Vue.createElementBlock, ee = window.Vue.withModifiers, De = window.Vue.normalizeStyle, y = window.Vue.createElementVNode, N = window.Vue.renderSlot, C = window.Vue.toDisplayString, b = window.Vue.createCommentVNode, te = window.Vue.createTextVNode, oe = window.Vue.normalizeClass, je = window.Vue.resolveComponent, A = window.Vue.withCtx, qe = window.Vue.createBlock, We = window.Vue.vShow, Ge = window.Vue.withDirectives, Qe = {
   ref: "nodes",
   class: "sl-vue-tree-next-nodes-list"
 }, Ze = ["onMousedown", "onMouseup", "onContextmenu", "onDblclick", "onClick", "onDragover", "onDrop", "path"], et = { class: "sl-vue-tree-next-gap" }, tt = {
   key: 0,
   class: "sl-vue-tree-next-branch"
-}, ot = { key: 0 }, nt = { key: 1 }, lt = { class: "sl-vue-tree-next-title" }, st = ["onClick"], rt = { class: "sl-vue-tree-next-sidebar" }, m = window.Vue.ref, it = window.Vue.onMounted, at = window.Vue.onBeforeUnmount, ut = window.Vue.watchEffect, k = window.Vue.computed, ct = /* @__PURE__ */ Ue({
+}, ot = { key: 0 }, nt = { key: 1 }, lt = { class: "sl-vue-tree-next-title" }, rt = ["onClick"], st = { class: "sl-vue-tree-next-sidebar" }, m = window.Vue.ref, it = window.Vue.onMounted, at = window.Vue.onBeforeUnmount, ut = window.Vue.watchEffect, k = window.Vue.computed, ct = /* @__PURE__ */ Ue({
   __name: "SlVueTreeNext",
   props: {
     modelValue: { default: () => [] },
@@ -15,7 +15,10 @@ const Ue = window.Vue.defineComponent, ye = window.Vue.renderList, be = window.V
     parentInd: { default: void 0 },
     parentContext: {},
     rootContext: {},
-    allowToggleBranch: { type: Boolean, default: !0 }
+    allowToggleBranch: { type: Boolean, default: !0 },
+    multiSelectKey: {},
+    scrollAreaHeight: { default: 70 },
+    maxScrollSpeed: { default: 20 }
   },
   emits: [
     "update:modelValue",
@@ -30,8 +33,8 @@ const Ue = window.Vue.defineComponent, ye = window.Vue.renderList, be = window.V
     "externaldragover",
     "externaldrop"
   ],
-  setup(De, { expose: ke, emit: Be }) {
-    const c = De, ne = Be, _ = m(), le = m(), O = m(null), T = m(0), F = m(0), H = m(null), $ = m(!1), V = m(!1), J = m({ x: 0, y: 0 }), R = m(!1), p = m([]), f = k(() => !c.level), se = k(() => {
+  setup(ke, { expose: Be, emit: Ee }) {
+    const c = ke, ne = Ee, _ = m(), le = m(), O = m(null), H = m(0), F = m(0), T = m(null), $ = m(!1), V = m(!1), J = m({ x: 0, y: 0 }), R = m(!1), p = m([]), f = k(() => !c.level), re = k(() => {
       const e = [];
       let t = c.level - 1;
       for (c.showBranches || t++; t-- > 0; )
@@ -40,18 +43,18 @@ const Ue = window.Vue.defineComponent, ye = window.Vue.renderList, be = window.V
     }), d = k(() => {
       var t;
       return f.value ? O.value : (t = W()) == null ? void 0 : t.cursorPosition.value;
-    }), re = k(() => se.value.length), K = k(() => {
-      var t, n, o, s;
+    }), se = k(() => re.value.length), K = k(() => {
+      var t, n, o, r;
       if (f.value) {
-        const l = C(p.value);
-        return ie(l);
+        const l = x(p.value);
+        return ae(l);
       }
-      return c.parentInd === null ? [] : (s = (o = (n = (t = W()) == null ? void 0 : t.currentNodes) == null ? void 0 : n.value) == null ? void 0 : o[c.parentInd]) == null ? void 0 : s.children;
-    }), Ee = k(() => he().length);
+      return c.parentInd === null ? [] : (r = (o = (n = (t = W()) == null ? void 0 : t.currentNodes) == null ? void 0 : n.value) == null ? void 0 : o[c.parentInd]) == null ? void 0 : r.children;
+    }), ie = k(() => me().length);
     k(() => Q().length), it(() => {
-      f.value && document.addEventListener("mouseup", ve);
+      f.value && document.addEventListener("mouseup", he);
     }), at(() => {
-      document.removeEventListener("mouseup", ve);
+      document.removeEventListener("mouseup", he);
     }), ut(() => {
       p.value = c.modelValue;
     });
@@ -62,42 +65,42 @@ const Ue = window.Vue.defineComponent, ye = window.Vue.renderList, be = window.V
         return;
       }
       (t = W()) == null || t.setCursorPosition(e);
-    }, ie = (e, t = [], n = !0) => e.map((o, s) => {
-      const l = t.concat(s);
+    }, ae = (e, t = [], n = !0) => e.map((o, r) => {
+      const l = t.concat(r);
       return E(l, o, e, n);
-    }), E = (e, t = null, n = null, o = !1) => {
-      const s = e.slice(-1)[0];
-      if (n = n || z(p.value, e), t = t || n && n[s] || null, o == null && (o = X == null ? void 0 : X(e)), !t)
+    }), E = (e, t = null, n = null, o = null) => {
+      const r = e.slice(-1)[0];
+      if (n = n || z(p.value, e), t = t || n && n[r] || null, o == null && (o = X == null ? void 0 : X(e)), !t)
         return null;
-      const l = t.isExpanded == null ? !0 : !!t.isExpanded, i = t.isDraggable == null ? !0 : !!t.isDraggable, r = t.isSelectable == null ? !0 : !!t.isSelectable;
+      const l = t.isExpanded == null ? !0 : !!t.isExpanded, i = t.isDraggable == null ? !0 : !!t.isDraggable, s = t.isSelectable == null ? !0 : !!t.isSelectable;
       return {
         // define the all TreeNodeModel props
         title: t.title,
         isLeaf: !!t.isLeaf,
-        children: t.children ? ie(t.children, e, l) : [],
+        children: t.children ? ae(t.children, e, l) : [],
         isSelected: !!t.isSelected,
         isExpanded: l,
         isVisible: o,
         isDraggable: i,
-        isSelectable: r,
+        isSelectable: s,
         data: t.data !== void 0 ? t.data : {},
         // define the all TreeNode computed props
         path: e,
         pathStr: JSON.stringify(e),
         level: e.length,
-        ind: s,
-        isFirstChild: s == 0,
-        isLastChild: s == ((n == null ? void 0 : n.length) ?? 0) - 1
+        ind: r,
+        isFirstChild: r == 0,
+        isLastChild: r == ((n == null ? void 0 : n.length) ?? 0) - 1
       };
     }, X = (e) => {
       if (e.length < 2)
         return !0;
       let t = p.value;
       for (let n = 0; n < e.length - 1; n++) {
-        let o = e[n], s = t[o];
-        if (!(s.isExpanded == null ? !0 : !!s.isExpanded))
+        let o = e[n], r = t[o];
+        if (!(r.isExpanded == null ? !0 : !!r.isExpanded))
           return !1;
-        t = s.children || [];
+        t = r.children || [];
       }
       return !0;
     }, I = (e) => {
@@ -110,9 +113,9 @@ const Ue = window.Vue.defineComponent, ye = window.Vue.renderList, be = window.V
       u().emit("drop", e, t, n);
     }, Le = (e, t) => {
       u().emit("toggle", e, t);
-    }, Te = (e, t) => {
-      u().emit("nodeclick", e, t);
     }, He = (e, t) => {
+      u().emit("nodeclick", e, t);
+    }, Te = (e, t) => {
       u().emit("nodedblclick", e, t);
     }, $e = (e, t) => {
       u().emit("nodecontextmenu", e, t);
@@ -129,14 +132,14 @@ const Ue = window.Vue.defineComponent, ye = window.Vue.renderList, be = window.V
       const l = E(e);
       if (!l)
         return null;
-      const i = C(p.value), r = c.allowMultiselect && n && n.shiftKey && H.value, a = [];
+      const i = x(p.value), s = c.allowMultiselect && n && n.shiftKey && T.value, a = [];
       let g = !1;
       return S((v, D) => {
         var L;
-        r ? ((v.pathStr === l.pathStr || v.pathStr === ((L = H.value) == null ? void 0 : L.pathStr)) && (D.isSelected = v.isSelectable, g = !g), g && (D.isSelected = v.isSelectable)) : v.pathStr === l.pathStr ? D.isSelected = v.isSelectable : t || D.isSelected && (D.isSelected = !1), D.isSelected && a.push(v);
-      }, i), H.value = l, I(i), _e(a, n), l;
-    }, ae = (e) => {
-      var Ce, xe;
+        s ? ((v.pathStr === l.pathStr || v.pathStr === ((L = T.value) == null ? void 0 : L.pathStr)) && (D.isSelected = v.isSelectable, g = !g), g && (D.isSelected = v.isSelectable)) : v.pathStr === l.pathStr ? D.isSelected = v.isSelectable : t || D.isSelected && (D.isSelected = !1), D.isSelected && a.push(v);
+      }, i), T.value = l, I(i), _e(a, n), l;
+    }, ue = (e) => {
+      var Ce, ye;
       if (!f.value) {
         (Ce = u()) == null || Ce.onMousemoveHandler(e);
         return;
@@ -149,31 +152,31 @@ const Ue = window.Vue.defineComponent, ye = window.Vue.renderList, be = window.V
         y: e.clientY
       }, !n)
         return;
-      const s = u().ref.value, l = s.getBoundingClientRect(), i = e.clientY - l.top + s.scrollTop - Number(((xe = _.value) == null ? void 0 : xe.style.marginBottom) ?? 0), r = e.clientX - l.left;
-      _.value && (_.value.style.top = i + "px", _.value.style.left = r + "px");
-      const a = ue(e.clientX, e.clientY), g = a == null ? void 0 : a.node, v = a == null ? void 0 : a.placement;
+      const r = u().ref.value, l = r.getBoundingClientRect(), i = e.clientY - l.top + r.scrollTop - Number(((ye = _.value) == null ? void 0 : ye.style.marginBottom) ?? 0), s = e.clientX - l.left;
+      _.value && (_.value.style.top = i + "px", _.value.style.left = s + "px");
+      const a = ce(e.clientX, e.clientY), g = a == null ? void 0 : a.node, v = a == null ? void 0 : a.placement;
       if (o && !g.isSelected && M(g.path, !1, e), !Q().length) {
         R.value = !0;
         return;
       }
       V.value = n, B({ node: g, placement: v });
-      const L = l.bottom - c.scrollAreaHeight, Se = (e.clientY - L) / (l.bottom - L), we = l.top + c.scrollAreaHeight, Ne = (we - e.clientY) / (we - l.top);
-      Se > 0 ? ge(Se) : Ne > 0 ? ge(-Ne) : j();
-    }, ue = (e, t) => {
-      const n = document.elementFromPoint(e, t), o = n != null && n.getAttribute("path") ? n : ce(n);
-      let s, l;
+      const L = l.bottom - c.scrollAreaHeight, we = (e.clientY - L) / (l.bottom - L), Ne = l.top + c.scrollAreaHeight, xe = (Ne - e.clientY) / (Ne - l.top);
+      we > 0 ? ve(we) : xe > 0 ? ve(-xe) : j();
+    }, ce = (e, t) => {
+      const n = document.elementFromPoint(e, t), o = n != null && n.getAttribute("path") ? n : de(n);
+      let r, l;
       if (o) {
         if (!o)
           return;
-        s = E(JSON.parse(o.getAttribute("path")));
-        const i = o.offsetHeight, r = c.edgeSize, a = t - o.getBoundingClientRect().top;
-        s.isLeaf ? l = a >= i / 2 ? "after" : "before" : a <= r ? l = "before" : a >= i - r ? l = "after" : l = "inside";
+        r = E(JSON.parse(o.getAttribute("path")));
+        const i = o.offsetHeight, s = c.edgeSize, a = t - o.getBoundingClientRect().top;
+        r.isLeaf ? l = a >= i / 2 ? "after" : "before" : a <= s ? l = "before" : a >= i - s ? l = "after" : l = "inside";
       } else {
-        const r = u().ref.value.getBoundingClientRect();
-        t > r.top + r.height / 2 ? (l = "after", s = de()) : (l = "before", s = U());
+        const s = u().ref.value.getBoundingClientRect();
+        t > s.top + s.height / 2 ? (l = "after", r = fe()) : (l = "before", r = U());
       }
-      return { node: s, placement: l };
-    }, ce = (e) => e ? e.getAttribute("path") ? e : ce(e.parentElement) : null, Ye = (e) => {
+      return { node: r, placement: l };
+    }, de = (e) => e ? e.getAttribute("path") ? e : de(e.parentElement) : null, Ye = (e) => {
       if (!f.value || !V.value)
         return;
       const n = u().ref.value.getBoundingClientRect();
@@ -182,7 +185,7 @@ const Ue = window.Vue.defineComponent, ye = window.Vue.renderList, be = window.V
         B({ node: o[0], placement: "after" });
       } else
         e.clientY < n.top && B({ node: U(), placement: "before" });
-    }, Ae = (e) => u().ref.value.querySelector(`[path="${JSON.stringify(e)}"]`), de = () => {
+    }, Ae = (e) => u().ref.value.querySelector(`[path="${JSON.stringify(e)}"]`), fe = () => {
       let e = null;
       return S((t) => {
         e = t;
@@ -190,24 +193,24 @@ const Ue = window.Vue.defineComponent, ye = window.Vue.renderList, be = window.V
     }, U = () => E([0]), Oe = (e, t) => {
       let n = null;
       return S((o) => {
-        if (!(fe(o.path, e) < 1) && (!t || t(o)))
+        if (!(pe(o.path, e) < 1) && (!t || t(o)))
           return n = o, !1;
       }), n;
     }, Fe = (e, t) => {
       let n = [];
-      S((s) => {
-        if (fe(s.path, e) >= 0)
+      S((r) => {
+        if (pe(r.path, e) >= 0)
           return !1;
-        n.push(s);
+        n.push(r);
       });
       let o = n.length;
       for (; o--; ) {
-        const s = n[o];
-        if (!t || t(s))
-          return s;
+        const r = n[o];
+        if (!t || t(r))
+          return r;
       }
       return null;
-    }, fe = (e, t) => {
+    }, pe = (e, t) => {
       for (let n = 0; n < e.length; n++) {
         if (t[n] == null || e[n] > t[n])
           return 1;
@@ -215,7 +218,7 @@ const Ue = window.Vue.defineComponent, ye = window.Vue.renderList, be = window.V
           return -1;
       }
       return t[e.length] == null ? 0 : -1;
-    }, pe = (e, t) => {
+    }, ge = (e, t) => {
       if (e.button === 0) {
         if (!f.value) {
           u().onNodeMousedownHandler(e, t);
@@ -223,14 +226,14 @@ const Ue = window.Vue.defineComponent, ye = window.Vue.renderList, be = window.V
         }
         $.value = !0;
       }
-    }, ge = (e) => {
+    }, ve = (e) => {
       const t = u().ref.value;
-      F.value !== e && (T.value && j(), F.value = e, T.value = setInterval(() => {
+      F.value !== e && (H.value && j(), F.value = e, H.value = setInterval(() => {
         t.scrollTop += c.maxScrollSpeed * e;
       }, 20));
     }, j = () => {
-      clearInterval(T.value), T.value = 0, F.value = 0;
-    }, ve = (e) => {
+      clearInterval(H.value), H.value = 0, F.value = 0;
+    }, he = (e) => {
       V.value && q(e);
     }, q = (e, t = null) => {
       if (e.button !== 0)
@@ -244,20 +247,20 @@ const Ue = window.Vue.defineComponent, ye = window.Vue.renderList, be = window.V
         return;
       }
       const n = Q();
-      for (let r of n) {
-        if (r.pathStr == d.value.node.pathStr) {
+      for (let s of n) {
+        if (s.pathStr == d.value.node.pathStr) {
           P();
           return;
         }
-        if (Me(r, d.value.node)) {
+        if (Me(s, d.value.node)) {
           P();
           return;
         }
       }
-      const o = C(p.value), s = [];
-      for (let r of n) {
-        const g = z(o, r.path)[r.ind];
-        s.push(g);
+      const o = x(p.value), r = [];
+      for (let s of n) {
+        const g = z(o, s.path)[s.ind];
+        r.push(g);
       }
       let l = !1;
       if (Ie(n, d.value, () => l = !0), l) {
@@ -265,11 +268,11 @@ const Ue = window.Vue.defineComponent, ye = window.Vue.renderList, be = window.V
         return;
       }
       const i = [];
-      for (let r of s)
-        i.push(C(r)), r.toBeDeleted = !0;
-      me(d.value, i, o), Z((r, a, g) => {
-        r.toBeDeleted && a.splice(g, 1);
-      }, o), H.value = null, I(o), Pe(n, d.value, e), P();
+      for (let s of r)
+        i.push(x(s)), s.toBeDeleted = !0;
+      Se(d.value, i, o), Z((s, a, g) => {
+        s.toBeDeleted && a.splice(g, 1);
+      }, o), T.value = null, I(o), Pe(n, d.value, e), P();
     }, Je = (e, t) => {
       c.allowToggleBranch && (G({ path: t.path, patch: { isExpanded: !t.isExpanded } }), Le(t, e), e.stopPropagation());
     }, P = () => {
@@ -279,12 +282,12 @@ const Ue = window.Vue.defineComponent, ye = window.Vue.renderList, be = window.V
         ne("updateNode", { path: e, patch: t });
         return;
       }
-      const n = JSON.stringify(e), o = C(p.value);
-      S((s, l) => {
-        if (s.pathStr === n)
+      const n = JSON.stringify(e), o = x(p.value);
+      S((r, l) => {
+        if (r.pathStr === n)
           return Object.assign(l, t), !1;
       }, o), I(o);
-    }, he = () => {
+    }, me = () => {
       const e = [];
       return S((t) => {
         t.isSelected && e.push(t);
@@ -297,13 +300,13 @@ const Ue = window.Vue.defineComponent, ye = window.Vue.renderList, be = window.V
     }, S = (e, t = null, n = []) => {
       t || (t = p.value);
       let o = !1;
-      const s = [];
+      const r = [];
       for (let l = 0; l < t.length; l++) {
-        const i = t[l], r = n.concat(l), a = E(r, i, t);
-        if (o = e(a, i, t) === !1, a && s.push(a), o || i.children && (o = S(e, i.children, r) === !1, o))
+        const i = t[l], s = n.concat(l), a = E(s, i, t);
+        if (o = e(a, i, t) === !1, a && r.push(a), o || i.children && (o = S(e, i.children, s) === !1, o))
           break;
       }
-      return o ? !1 : s;
+      return o ? !1 : r;
     }, Z = (e, t) => {
       let n = t.length;
       for (; n--; ) {
@@ -312,72 +315,73 @@ const Ue = window.Vue.defineComponent, ye = window.Vue.renderList, be = window.V
       }
       return t;
     }, Ke = (e) => {
-      const t = e.map((o) => JSON.stringify(o)), n = C(p.value);
-      S((o, s, l) => {
+      const t = e.map((o) => JSON.stringify(o)), n = x(p.value);
+      S((o, r, l) => {
         for (const i of t)
-          o.pathStr === i && (s.toBeDeleted = !0);
-      }, n), Z((o, s, l) => {
-        o.toBeDeleted && s.splice(l, 1);
+          o.pathStr === i && (r.toBeDeleted = !0);
+      }, n), Z((o, r, l) => {
+        o.toBeDeleted && r.splice(l, 1);
       }, n), I(n);
-    }, me = (e, t, n) => {
-      const o = C(e), s = o.node, l = z(n, s.path), i = l[s.ind];
+    }, Se = (e, t, n) => {
+      const o = x(e), r = o.node, l = z(n, r.path), i = l[r.ind];
       if (o.placement === "inside")
         i.children = i.children || [], i.children.unshift(...t);
       else {
-        const r = o.placement === "before" ? s.ind : s.ind + 1;
-        l.splice(r, 0, ...t);
+        const s = o.placement === "before" ? r.ind : r.ind + 1;
+        l.splice(s, 0, ...t);
       }
     }, Xe = (e, t) => {
-      const n = Array.isArray(t) ? t : [t], o = C(p.value);
-      me(e, n, o), I(o);
+      const n = Array.isArray(t) ? t : [t], o = x(p.value);
+      Se(e, n, o), I(o);
     }, Me = (e, t) => {
-      const o = C(t).path;
+      const o = x(t).path;
       return JSON.stringify(o.slice(0, e.path.length)) == e.pathStr;
-    }, C = (e) => JSON.parse(JSON.stringify(e)), Y = {
+    }, x = (e) => JSON.parse(JSON.stringify(e)), Y = {
       getRoot: u,
       setCursorPosition: B,
       currentNodes: K,
       cursorPosition: d,
       emit: ne,
       ref: le,
-      onNodeMousedownHandler: pe,
+      onNodeMousedownHandler: ge,
       onNodeMouseupHandler: q,
-      onMousemoveHandler: ae,
-      getCursorPositionFromCoords: ue,
+      onMousemoveHandler: ue,
+      getCursorPositionFromCoords: ce,
       updateNode: G,
       getNode: E,
       traverse: S,
       select: M,
       getNodeEl: Ae,
       getFirstNode: U,
-      getLastNode: de,
+      getLastNode: fe,
       getNextNode: Oe,
       getPrevNode: Fe,
-      getSelected: he,
+      getSelected: me,
       insert: Xe,
       remove: Ke,
-      rootCursorPosition: O
+      rootCursorPosition: O,
+      selectionSize: ie
     };
-    return ke(Y), (e, t) => {
+    return Be(Y), (e, t) => {
       const n = je("SlVueTreeNext", !0);
       return h(), w("div", {
         ref_key: "rootRef",
         ref: le,
         class: oe(["sl-vue-tree-next", { "sl-vue-tree-next-root": f.value }]),
-        onMousemove: ae,
+        onMousemove: ue,
         onMouseleave: Ye
       }, [
         y("div", Qe, [
-          (h(!0), w(be, null, ye(K.value, (o, s) => (h(), w("div", {
+          (h(!0), w(Ve, null, be(K.value, (o, r) => (h(), w("div", {
             class: oe(["sl-vue-tree-next-node", { "sl-vue-tree-next-selected": o.isSelected }])
           }, [
             y("div", {
               class: "sl-vue-tree-next-cursor sl-vue-tree-next-cursor_before",
               onDragover: t[0] || (t[0] = ee(() => {
               }, ["prevent"])),
-              style: Ve({
+              style: De({
                 visibility: d.value && d.value.node.pathStr === o.pathStr && d.value.placement === "before" ? "visible" : "hidden",
-                "--depth": re.value
+                "--depth": se.value
               })
             }, null, 36),
             y("div", {
@@ -387,20 +391,20 @@ const Ue = window.Vue.defineComponent, ye = window.Vue.renderList, be = window.V
                 "sl-vue-tree-next-node-is-leaf": o.isLeaf,
                 "sl-vue-tree-next-node-is-folder": !o.isLeaf
               }]),
-              onMousedown: (l) => pe(l, o),
+              onMousedown: (l) => ge(l, o),
               onMouseup: (l) => q(l, o),
               onContextmenu: (l) => $e(o, l),
-              onDblclick: (l) => He(o, l),
-              onClick: (l) => Te(o, l),
+              onDblclick: (l) => Te(o, l),
+              onClick: (l) => He(o, l),
               onDragover: (l) => Re(o, l),
               onDrop: (l) => ze(o, l),
               path: o.pathStr
             }, [
-              (h(!0), w(be, null, ye(se.value, (l) => (h(), w("div", et))), 256)),
+              (h(!0), w(Ve, null, be(re.value, (l) => (h(), w("div", et))), 256)),
               e.level && e.showBranches ? (h(), w("div", tt, [
                 N(e.$slots, "branch", { node: o }, () => [
-                  o.isLastChild ? b("", !0) : (h(), w("span", ot, x("├") + x("─") + "  ", 1)),
-                  o.isLastChild ? (h(), w("span", nt, x("└") + x("─") + "  ", 1)) : b("", !0)
+                  o.isLastChild ? b("", !0) : (h(), w("span", ot, C("├") + C("─") + "  ", 1)),
+                  o.isLastChild ? (h(), w("span", nt, C("└") + C("─") + "  ", 1)) : b("", !0)
                 ])
               ])) : b("", !0),
               y("div", lt, [
@@ -410,18 +414,18 @@ const Ue = window.Vue.defineComponent, ye = window.Vue.renderList, be = window.V
                   onClick: (l) => Je(l, o)
                 }, [
                   N(e.$slots, "toggle", { node: o }, () => [
-                    y("span", null, x(o.isLeaf ? "" : o.isExpanded ? "-" : "+"), 1)
+                    y("span", null, C(o.isLeaf ? "" : o.isExpanded ? "-" : "+"), 1)
                   ])
-                ], 8, st)),
+                ], 8, rt)),
                 N(e.$slots, "title", { node: o }, () => [
-                  te(x(o.title), 1)
+                  te(C(o.title), 1)
                 ]),
                 !o.isLeaf && o.children.length == 0 && o.isExpanded ? N(e.$slots, "empty-node", {
                   key: 1,
                   node: o
                 }) : b("", !0)
               ]),
-              y("div", rt, [
+              y("div", st, [
                 N(e.$slots, "sidebar", { node: o })
               ])
             ], 42, Ze),
@@ -429,7 +433,7 @@ const Ue = window.Vue.defineComponent, ye = window.Vue.renderList, be = window.V
               key: 0,
               "model-value": o.children,
               level: o.level,
-              "parent-ind": s,
+              "parent-ind": r,
               "allow-multiselect": e.allowMultiselect,
               "allow-toggle-branch": e.allowToggleBranch,
               "edge-size": e.edgeSize,
@@ -442,12 +446,12 @@ const Ue = window.Vue.defineComponent, ye = window.Vue.renderList, be = window.V
             }, {
               title: A(({ node: l }) => [
                 N(e.$slots, "title", { node: l }, () => [
-                  te(x(l.title), 1)
+                  te(C(l.title), 1)
                 ])
               ]),
               toggle: A(({ node: l }) => [
                 N(e.$slots, "toggle", { node: l }, () => [
-                  y("span", null, x(l.isLeaf ? "" : l.isExpanded ? "-" : "+"), 1)
+                  y("span", null, C(l.isLeaf ? "" : l.isExpanded ? "-" : "+"), 1)
                 ])
               ]),
               sidebar: A(({ node: l }) => [
@@ -465,9 +469,9 @@ const Ue = window.Vue.defineComponent, ye = window.Vue.renderList, be = window.V
               class: "sl-vue-tree-next-cursor sl-vue-tree-next-cursor_after",
               onDragover: t[2] || (t[2] = ee(() => {
               }, ["prevent"])),
-              style: Ve({
+              style: De({
                 visibility: d.value && d.value.node.pathStr === o.pathStr && d.value.placement === "after" ? "visible" : "hidden",
-                "--depth": re.value
+                "--depth": se.value
               })
             }, null, 36)
           ], 2))), 256)),
@@ -478,7 +482,7 @@ const Ue = window.Vue.defineComponent, ye = window.Vue.renderList, be = window.V
             class: "sl-vue-tree-next-drag-info"
           }, [
             N(e.$slots, "draginfo", {}, () => [
-              te(" Items: " + x(Ee.value), 1)
+              te(" Items: " + C(ie.value), 1)
             ])
           ], 512)), [
             [We, V.value]

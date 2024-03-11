@@ -8,6 +8,8 @@
                 v-model="nodes"
                 ref="slVueTree"
                 :allow-multiselect="true"
+                :max-scroll-speed="10"
+                :scroll-area-height="20"
                 @select="nodeSelected"
                 @drop="nodeDropped"
                 @toggle="nodeToggled"
@@ -38,15 +40,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { SlVueTreeNext } from './components/SlVueTreeNext'
-import type { Context } from './components/SlVueTreeNext'
+import type { Context, TreeNode } from './components/SlVueTreeNext'
 
 interface DataType {
     visible?: boolean
 }
 
-const nodes = ref([
+const nodes = ref<TreeNode[]>([
     { title: 'Item1', isLeaf: true },
     { title: 'Item2', isLeaf: true, data: { visible: false } },
     { title: 'Folder1' },
@@ -85,14 +87,6 @@ const lastEvent = ref('No last event')
 const slVueTree = ref<Context<DataType> | null>(null)
 
 //methods
-
-const toggleVisibility = (event, node) => {
-    event.stopPropagation()
-    const visible = !node.data || node.data.visible !== false
-    slVueTree.value?.updateNode({ path: node.path, patch: { data: { visible: !visible } } })
-    lastEvent.value = `Node ${node.title} is ${visible ? 'visible' : 'invisible'} now`
-}
-
 const nodeSelected = (nodes, event) => {
     selectedNodesTitle.value = nodes.map((node) => node.title).join(', ')
     lastEvent.value = `Select nodes: ${selectedNodesTitle}`
@@ -111,6 +105,41 @@ const nodeDropped = (nodes, position, event) => {
 const removeNode = () => {
     const paths = slVueTree.value?.getSelected().map((node) => node.path)
     slVueTree.value?.remove(paths)
+}
+
+onMounted(() => {
+    window.addEventListener('keydown', onArrowDownHandler)
+})
+
+onUnmounted(() => {
+    window.removeEventListener('keydown', onArrowDownHandler)
+})
+
+const onArrowDownHandler = (event) => {
+    event.preventDefault()
+    const keyCode = event.code
+
+    if (slVueTree.value.selectionSize === 1) {
+        const selectedNode = slVueTree.value.getSelected()[0]
+        let nodeToSelect
+
+        if (keyCode === 'ArrowDown') {
+            nodeToSelect = slVueTree.value.getNextNode(selectedNode.path, (node) => node.isVisible)
+        } else if (keyCode === 'ArrowUp') {
+            nodeToSelect = slVueTree.value.getPrevNode(selectedNode.path, (node) => node.isVisible)
+        } else if (keyCode === 'Enter' || keyCode === 'Space') {
+            if (selectedNode.isLeaf) return
+            slVueTree.value.updateNode({ path: selectedNode.path, patch: { isExpanded: !selectedNode.isExpanded } })
+        }
+
+        if (!nodeToSelect) return
+
+        slVueTree.value.select(nodeToSelect.path)
+    } else if (keyCode === 'ArrowDown') {
+        slVueTree.value.select(slVueTree.value.getFirstNode().path)
+    } else if (keyCode === 'ArrowUp') {
+        slVueTree.value.select(slVueTree.value.getLastNode().path)
+    }
 }
 </script>
 

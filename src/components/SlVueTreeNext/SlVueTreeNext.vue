@@ -156,7 +156,14 @@
 
 <script setup lang="ts" generic="T">
 import { ref, onMounted, onBeforeUnmount, watchEffect, computed, Ref } from 'vue'
-import type { NodeModel, TreeNode, SlVueTreeProps, CursorPosition, Context } from './types'
+import {
+    type NodeModel,
+    type TreeNode,
+    type SlVueTreeProps,
+    type CursorPosition,
+    type Context,
+    MultiSelectKey,
+} from './types'
 
 // props
 const props = withDefaults(defineProps<SlVueTreeProps<T>>(), {
@@ -167,7 +174,7 @@ const props = withDefaults(defineProps<SlVueTreeProps<T>>(), {
     parentInd: undefined,
     allowMultiselect: true,
     allowToggleBranch: true,
-    multiselectKey: () => ['ctrlKey', 'metaKey'],
+    multiselectKey: () => [MultiSelectKey.CTRL, MultiSelectKey.META],
     scrollAreaHeight: 70,
     maxScrollSpeed: 20,
 })
@@ -283,7 +290,7 @@ const getNode = (
     path,
     nodeModel: NodeModel<T> | null = null,
     siblings: NodeModel<T>[] | null = null,
-    visible = false,
+    visible = null,
 ): TreeNode<T> | null => {
     const ind = path.slice(-1)[0]
 
@@ -918,6 +925,7 @@ const currentContext: Context<T> = {
     insert,
     remove,
     rootCursorPosition,
+    selectionSize
 }
 
 // needed for access through refs. https://vuejs.org/guide/typescript/composition-api#typing-component-template-refs

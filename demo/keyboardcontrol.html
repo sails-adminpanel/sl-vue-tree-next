@@ -99,7 +99,10 @@
                                 nodeToSelect = slVueTree.getPrevNode(selectedNode.path, (node) => node.isVisible)
                             } else if (keyCode === 'Enter' || keyCode === 'Space') {
                                 if (selectedNode.isLeaf) return
-                                slVueTree.updateNode(selectedNode.path, { isExpanded: !selectedNode.isExpanded })
+                                slVueTree.updateNode({
+                                    path: selectedNode.path,
+                                    patch: { isExpanded: !selectedNode.isExpanded },
+                                })
                             }
 
                             if (!nodeToSelect) return

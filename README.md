@@ -208,6 +208,11 @@ slVueTree.traverse((node, nodeModel, path) => {
 [see CONTRIBUTING.md](CONTRIBUTING.md)
 
 # Changelog
+v0.0.11
+- fixes keyboard control issues
+- exposes maxScrollSpeed and scrollAreaHeight as props
+- exposes selectionSize to ref
+
 v0.0.10
 - fixes lower level icons not appearing bug
 - fixes node update bug

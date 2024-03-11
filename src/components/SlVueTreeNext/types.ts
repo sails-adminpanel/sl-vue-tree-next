@@ -1,4 +1,9 @@
-import { ComputedRef, Ref } from "vue"
+import { ComputedRef, Ref } from 'vue'
+
+export enum MultiSelectKey {
+    CTRL = 'ctrlKey',
+    META = 'metaKey',
+}
 
 export interface NodeModel<T> {
     title: string
@@ -43,6 +48,9 @@ export interface SlVueTreeProps<T> {
     parentContext?: Context<T>
     rootContext?: any
     allowToggleBranch?: boolean
+    multiSelectKey? : MultiSelectKey[]
+    scrollAreaHeight?: number
+    maxScrollSpeed?: number
 }
 
 export interface Context<T> {
@@ -69,4 +77,5 @@ export interface Context<T> {
     insert: (node: TreeNode<T>, data: NodeModel<T>, placement: 'before' | 'inside' | 'after') => void
     remove: (paths?: number[][]) => void
     rootCursorPosition: Ref<CursorPosition<T>>
+    selectionSize: ComputedRef<number>
 }
