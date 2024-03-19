@@ -208,6 +208,14 @@ slVueTree.traverse((node, nodeModel, path) => {
 [see CONTRIBUTING.md](CONTRIBUTING.md)
 
 # Changelog
+v0.0.13
+- fixes duplicate node issue when moving multiple nodes
+- uses deep merge to update node when using updateNode function
+- fixes dark mode toggle button in demo
+
+v0.0.12
+- fixes wrong `defineComponent` not defined issue
+
 v0.0.11
 - fixes keyboard control issues
 - exposes maxScrollSpeed and scrollAreaHeight as props
