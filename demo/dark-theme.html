@@ -76,7 +76,7 @@
 
             const nodes = [
                 { title: 'Item1', isLeaf: true },
-                { title: 'Item2', isLeaf: true, data: { visible: false } },
+                { title: 'Item2', isLeaf: true, data: { visible: false, renameNode: true } },
                 { title: 'Folder1' },
                 {
                     title: 'Folder2',
@@ -128,7 +128,7 @@
                         const slVueTree = this.$refs.slVueTree
                         event.stopPropagation()
                         const visible = !node.data || node.data.visible !== false
-                        slVueTree.updateNode(node.path, { data: { visible: !visible } })
+                        slVueTree.updateNode({ path: node.path, patch: { data: { visible: !visible } }})
                         this.lastEvent = `Node ${node.title} is ${visible ? 'visible' : 'invisible'} now`
                     },
 

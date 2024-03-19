@@ -164,6 +164,7 @@ import {
     type Context,
     MultiSelectKey,
 } from './types'
+import { deepMerge } from './utils'
 
 // props
 const props = withDefaults(defineProps<SlVueTreeProps<T>>(), {
@@ -784,7 +785,7 @@ const updateNode = ({ path, patch }) => {
     const newNodes = copy(currentValue.value)
     traverse((node, nodeModel) => {
         if (node.pathStr !== pathStr) return
-        Object.assign(nodeModel, patch)
+        deepMerge(nodeModel, patch)
         return false // stop traverse because we found the node.
     }, newNodes)
 
@@ -798,11 +799,23 @@ const getSelected = () => {
     })
     return selectedNodes
 }
+/**
+ * Check if node is a child of another node
+ * @param {TreeNode} source
+ * @param {TreeNode} target
+ * @returns {boolean}
+*/
+const isChild = (source: TreeNode<T>, target: TreeNode<T>) => {
+    return JSON.stringify(source.path.slice(0, target.path.length)) === target.pathStr
+}
 
 const getDraggable = () => {
     const selectedNodes: TreeNode<T>[] = []
     traverse((node) => {
-        if (node.isSelected && node.isDraggable) selectedNodes.push(node)
+        if (node.isSelected && node.isDraggable) {
+            const isChildOfSelected = selectedNodes.some((selectedNode) => isChild(node, selectedNode))
+            if (!isChildOfSelected) selectedNodes.push(node)
+        }
     })
     return selectedNodes
 }
@@ -925,7 +938,7 @@ const currentContext: Context<T> = {
     insert,
     remove,
     rootCursorPosition,
-    selectionSize
+    selectionSize,
 }
 
 // needed for access through refs. https://vuejs.org/guide/typescript/composition-api#typing-component-template-refs

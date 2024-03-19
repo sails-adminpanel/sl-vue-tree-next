@@ -34,7 +34,9 @@
         "build": "vite build",
         "serve": "vite preview",
         "lint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src",
-        "format": "prettier .  --write"
+        "format": "prettier .  --write",
+        "test": "vitest",
+        "coverage": "vitest run --coverage"
     },
     "keywords": [
         "vue",
@@ -55,6 +57,7 @@
         "vite": "^5.0.12",
         "vite-plugin-dts": "^3.7.2",
         "vite-plugin-externals": "^0.6.2",
+        "vitest": "^1.4.0",
         "vue": "^3.4.18"
     }
 }
