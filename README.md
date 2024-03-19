@@ -151,7 +151,7 @@ interface ICursorPosition<TDataType> {
 |----------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------|
 | getNode(path: number[]): TreeNode                                                                     | Find the node by using its path                                                                   |
 | traverse(cb: (node: TreeNode, nodeModel: NodeModel, siblings: NodeModel[])  => boolean) | Helpful method to traverse all nodes. The traversing will be stopped if callback returns `false`.  |
-| updateNode(path: number[], patch: Partial<NodeModel>)                                             | Update the node by using its path                                                                 |
+| updateNode({ path: number[], patch: Partial<NodeModel> })                                             | Update the node by using its path                                                                 |
 | select(path: number[], addToSelection = false)                                                           | Select the node by using its path                                                                 |                                                                                                                                              |
 | getNodeEl(): HTMLElement                                                                                 | Get the node HTMLElement by using its path                                                        |
 | getSelected(): TreeNode[]                                                                             | Get selected nodes                                                                                 |
@@ -208,6 +208,14 @@ slVueTree.traverse((node, nodeModel, path) => {
 [see CONTRIBUTING.md](CONTRIBUTING.md)
 
 # Changelog
+v0.0.13
+- fixes duplicate node issue when moving multiple nodes
+- uses deep merge to update node when using updateNode function
+- fixes dark mode toggle button in demo
+
+v0.0.12
+- fixes wrong `defineComponent` not defined issue
+
 v0.0.11
 - fixes keyboard control issues
 - exposes maxScrollSpeed and scrollAreaHeight as props

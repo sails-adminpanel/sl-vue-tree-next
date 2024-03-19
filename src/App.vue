@@ -28,6 +28,13 @@
                         <i v-if="!node.isExpanded" class="fa fa-chevron-right"></i>
                     </span>
                 </template>
+
+                <template #sidebar="{ node }">
+                    <span class="visible-icon" @click="(event) => toggleVisibility(event, node)">
+                        <i v-if="!node.data || node.data.visible !== false" class="fa fa-eye"></i>
+                        <i v-if="node.data && node.data.visible === false" class="fa fa-eye-slash"></i>
+                    </span>
+                </template>
             </sl-vue-tree-next>
         </div>
 
@@ -48,7 +55,7 @@ interface DataType {
     visible?: boolean
 }
 
-const nodes = ref<TreeNode[]>([
+const nodes = ref<TreeNode<DataType>[]>([
     { title: 'Item1', isLeaf: true },
     { title: 'Item2', isLeaf: true, data: { visible: false } },
     { title: 'Folder1' },
@@ -105,6 +112,13 @@ const nodeDropped = (nodes, position, event) => {
 const removeNode = () => {
     const paths = slVueTree.value?.getSelected().map((node) => node.path)
     slVueTree.value?.remove(paths)
+}
+
+const toggleVisibility = (event, node) => {
+    event.stopPropagation()
+    const visible = !node.data || node.data.visible !== false
+    slVueTree.value.updateNode({ path: node.path, patch: { data: { visible: !visible } } })
+    lastEvent.value = `Node ${node.title} is ${!visible ? 'visible' : 'invisible'} now`
 }
 
 onMounted(() => {
