@@ -3,8 +3,9 @@
         ref="rootRef"
         class="sl-vue-tree-next"
         :class="{ 'sl-vue-tree-next-root': isRoot }"
-        @mousemove="onMousemoveHandler"
-        @mouseleave="onMouseleaveHandler"
+        @pointermove="onMousemoveHandler"
+        @pointerleave="onMouseleaveHandler"
+        style="touch-action: none"
     >
         <div ref="nodes" class="sl-vue-tree-next-nodes-list">
             <div
@@ -30,8 +31,8 @@
 
                 <div
                     class="sl-vue-tree-next-node-item"
-                    @mousedown="onNodeMousedownHandler($event, node)"
-                    @mouseup="onNodeMouseupHandler($event, node)"
+                    @pointerdown="onNodeMousedownHandler($event, node)"
+                    @pointerup="onNodeMouseupHandler($event, node)"
                     @contextmenu="emitNodeContextmenu(node, $event)"
                     @dblclick="emitNodeDblclick(node, $event)"
                     @click="emitNodeClick(node, $event)"
@@ -689,7 +690,6 @@ const onNodeMouseupHandler = (event: MouseEvent, targetNode: TreeNode<T> | null 
     }
 
     const draggingNodes = getDraggable()
-
     // check that nodes is possible to insert
     for (let draggingNode of draggingNodes) {
         if (draggingNode.pathStr == cursorPosition.value.node.pathStr) {
@@ -804,7 +804,7 @@ const getSelected = () => {
  * @param {TreeNode} source
  * @param {TreeNode} target
  * @returns {boolean}
-*/
+ */
 const isChild = (source: TreeNode<T>, target: TreeNode<T>) => {
     return JSON.stringify(source.path.slice(0, target.path.length)) === target.pathStr
 }

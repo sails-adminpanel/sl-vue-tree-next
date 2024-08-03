@@ -1,12 +1,12 @@
 {
-    "name": "sl-vue-tree-next",
-    "version": "0.0.13",
+    "name": "@sails-adminpanel/sl-vue-tree-next",
+    "version": "0.0.14",
     "description": "draggable tree vue component",
     "browserslist": "> 0.25%, not dead",
     "type": "module",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/kcsujeet/sl-vue-tree-next"
+        "url": "git+https://github.com/sails-adminpanel/sl-vue-tree-next"
     },
     "files": [
         "dist",
